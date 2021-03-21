@@ -21,6 +21,7 @@ task -example
     - Identity element There exists an element e (mempty) in S such that for every element a in S,
       the equations ea = ae = a hold.
 """
+from queue import Queue
 
 class TreeNode(object):
     def __init__(self, value=-1, lchild=None, rchild=None):
@@ -32,3 +33,77 @@ class TreeNode(object):
     def get_value(self):
         # get value
         return self.value
+
+
+class BinaryTree(object):
+    def __init__(self, root=None):
+        # constructor
+        self.root = root
+        self.level_queue = []
+        self.cur = 0
+
+    def insert_node_in_order(self, value):
+        # add new node
+        new_node = TreeNode(value)
+        # if tree is empty
+        if self.root is None:
+            self.root = new_node
+        else:
+            # use queue to find the next position
+            queue = Queue()
+            queue.put(self.root)
+            while not queue.empty():
+                cur_node = queue.get()
+                if cur_node.lchild is None:
+                    cur_node.lchild = new_node
+                    break
+                elif cur_node.rchild is None:
+                    cur_node.rchild = new_node
+                    break
+                else:
+                    queue.put(cur_node.lchild)
+                    queue.put(cur_node.rchild)
+
+    def get_parent(self, value):
+        # get node's parent node
+        if self.root.value == value:
+            return None
+        queue = Queue()
+        queue.put(self.root)
+        # use queue to level traverse the tree and find the node equal the value
+        while not queue.empty():
+            # get the front node from queue
+            cur_node = queue.get()
+            # get left child
+            lchild = cur_node.lchild
+            if lchild:
+                if lchild.value == value:
+                    return cur_node
+                else:
+                    queue.put(cur_node.lchild)
+            # get right child
+            rchild = cur_node.rchild
+            if rchild:
+                if rchild.value == value:
+                    return cur_node
+                else:
+                    queue.put(cur_node.rchild)
+        return None
+
+    def remove_node(self, value):
+        # remove node whose .value is value
+        # if root is null can not remove
+        if not self.root:
+            return False
+        if self.root.value == value:
+            self.root = None
+            return True
+        # remove the value from list
+        list = self.to_list_pre_order()
+        list.remove(value)
+        # reconstruct a tree
+        self.root = None
+        for i in list:
+            self.insert_node_in_order(i)
+        return self.root
+
