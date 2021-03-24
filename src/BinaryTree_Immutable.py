@@ -1,6 +1,6 @@
 from queue import Queue
 
-class binary_tree_node(object):
+class TreeNode(object):
     def __init__(self,value=None,lchild=None,rchild=None):
         self.value = value
         self.lchild = lchild
@@ -10,16 +10,16 @@ class binary_tree_node(object):
         # return node.element
         return self.value
 
-    def __eq__(self, tree):
+    def __eq__(root, tree):
         # whether two trees are the same
-        if self.root is None and tree.root is None:
+        if root is None and tree.root is None:
             return True
         # pre order list
-        lpre1 = self.to_list_pre_order()
-        lpre2 = tree.to_list_pre_order()
+        lpre1 = to_preOrder_list(root)
+        lpre2 = to_preOrder_list(tree)
         # in order list
-        lin1 = self.to_list_in_order()
-        lin2 = tree.to_list_in_order()
+        lin1 = to_inOrder_list(root)
+        lin2 = to_inOrder_list(tree)
 
         # pre order and in order can determine a tree
         for i in range(len(lpre1)):
@@ -33,7 +33,7 @@ class binary_tree_node(object):
 def create_new_root(node):
     if node is None:
         return None
-    new_root = binary_tree_node(node.value)
+    new_root = TreeNode(node.value)
     new_root.lchild = create_new_root(node.lchild)
     new_root.rchild = create_new_root(node.rchild)
     return new_root
@@ -45,7 +45,7 @@ def im_size(node):
 
 def add(root,value):
     # add new node
-    new_node = binary_tree_node(value)
+    new_node = TreeNode(value)
     # if tree is empty
     if root is None:
         root = new_node
@@ -65,6 +65,7 @@ def add(root,value):
             else:
                 queue.put(cur_node.lchild)
                 queue.put(cur_node.rchild)
+    return root
 
 
 def mempty():
@@ -88,7 +89,6 @@ def preOrderTraverse(root):
 
     return result
 
-
 def in_order(node, list):
     if node is None:
         return []
@@ -108,9 +108,51 @@ def inOrderTraverse(root):
 def to_preOrder_list(root):
     return preOrderTraverse(root)
 
+def to_inOrder_list(root):
+    return preOrderTraverse(root)
+
+
+def to_list_level_order(root):
+    #  get tree's level-order list
+    if root is None:
+        return []
+    my_list = []
+    queue = Queue()
+    queue.put(root)
+    while not queue.empty():
+        cur_node = queue.get()
+        my_list.append(cur_node.value)
+        if cur_node.lchild:
+            queue.put(cur_node.lchild)
+        if cur_node.rchild:
+            queue.put(cur_node.rchild)
+    return my_list
+
 def from_list(root, lst):
-    for index in range(len(lst)):
-        add(root,lst[index])
+
+    temp_list = lst.copy()
+    flag = False
+    if len(lst) == 0:
+        root = None
+        return
+    value = temp_list[0]
+    temp_list.pop(0)
+    root = TreeNode(value)
+    queue = [root]
+    # make tree to list
+    temp = TreeNode()
+    for i in temp_list:
+        if flag:
+            temp.rchild = TreeNode(i)
+            queue.append(temp.rchild)
+            flag = False
+        else:
+            temp = queue.pop()
+            temp.lchild = TreeNode(i)
+            queue.append(temp.lchild)
+            flag = True
+            continue
+
     return root
 
 def find_maxval(root):
@@ -129,12 +171,12 @@ def reduce_fuc(s, a):
         return s
 
 # filter even value
-def filter_func(lst):
-    new_list = []
-    for i in lst:
-        if i % 2 == 1:
-            new_list.append(i)
-    return new_list
+# def filter_func(lst):
+#     new_list = []
+#     for i in lst:
+#         if i % 2 == 1:
+#             new_list.append(i)
+#     return new_list
 
 
 def map(node,f):
@@ -143,9 +185,14 @@ def map(node,f):
         listmap[i] = f(listmap[i])
     return listmap
 
-def fliter(node,func):
-    listfl = preOrderTraverse(node)
-    return func(listfl)
+# find the even value
+def fliter(node):
+    list = preOrderTraverse(node)
+    new_list = []
+    for i in list:
+        if i % 2 == 1:
+            new_list.append(i)
+    return new_list
 
 def reduce(node,reduce_fuc):
     listre=preOrderTraverse(node)
@@ -177,7 +224,7 @@ def get_parent(root, value):
     while not queue.empty():
         # get the front node from queue
         cur_node = queue.get()
-        # get left child
+        # get lchild child
         lchild = cur_node.lchild
         if lchild:
             if lchild.value == value:
@@ -193,7 +240,7 @@ def get_parent(root, value):
                 queue.put(cur_node.rchild)
     return None
 
-def delete(root, value):
+def remove(root, value):
     # if root is null can not remove
     if not root:
         return False
@@ -201,13 +248,13 @@ def delete(root, value):
         root = None
         return True
     # remove the value from list
-    list = to_preOrder_list()
+    list = to_preOrder_list(root)
     list.remove(value)
     # reconstruct a tree
     root = None
     for i in list:
         add(root,i)
-    return root
+    return True
 
 
 def iterator(root):
