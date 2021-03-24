@@ -2,7 +2,7 @@
 
 1. title: Computational Process Organization Lab 1
 2. group name : 224_NB
-3. group member : Ni Yijie 202320064
+3. group member : Ni Yijie 202320064;Sun Qing 202320057
 4. laboratory work number: 3
 5. variant description: set based on binary-tree
 6. synopsis
@@ -18,5 +18,6 @@
     8.2 we use github to control our code version
     8.3 we can run it in terminal like 
         ` python BinaryTree_Mutable_test.py  `
+        ` python BinaryTree_Immutable_test.py`
    
    
