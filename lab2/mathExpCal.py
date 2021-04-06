@@ -102,3 +102,45 @@ class MathExpCal(object):
 
         while len(ope_stack):
             self.symList.append(ope_stack.pop())
+
+    def calculate(self, **kwargs):
+        cal_stack = list()
+        self.val_dic = kwargs
+        for op in self.symList:
+            if op in one_para_func:
+                if op == 'sin':
+                    cal_stack.append(sin(cal_stack.pop()))
+                elif op == 'cos':
+                    cal_stack.append(cos(cal_stack.pop()))
+                elif op == 'tan':
+                    cal_stack.append(tan(cal_stack.pop()))
+            elif op in mul_para_func:
+                r_value = cal_stack.pop()
+                l_value = cal_stack.pop()
+                if op == '+':
+                    cal_stack.append(l_value + r_value)
+                elif op == '-':
+                    cal_stack.append(l_value - r_value)
+                elif op == '*':
+                    cal_stack.append(l_value * r_value)
+                elif op == '/':
+                    cal_stack.append(l_value / r_value)
+                elif op == 'log':
+                    cal_stack.append(log(l_value, r_value))
+                elif op == 'pow':
+                    cal_stack.append(pow(l_value, r_value))
+            elif op not in self.val_dic.keys():
+                cal_stack.append(float(op))
+            elif len(op) == 1:
+                cal_stack.append(self.val_dic[op])
+            else:
+                # if is func
+                func = self.val_dic[op]
+                args_nums = func.__code__.co_argcount
+
+                dic = dict()
+                for j in range(args_nums):
+                    dic[j] = cal_stack.pop()
+                v = func(*dic.values())
+                cal_stack.append(v)
+        return cal_stack.pop()
