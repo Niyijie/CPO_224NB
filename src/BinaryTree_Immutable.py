@@ -1,4 +1,5 @@
 from queue import Queue
+import sys
 
 class TreeNode(object):
     def __init__(self,value=None,lchild=None,rchild=None):
@@ -157,7 +158,7 @@ def from_list(root, lst):
 
 def find_maxval(root):
     list = to_preOrder_list(root)
-    maxV = -9999
+    maxV = -sys.maxsize - 1
     for v in list:
         if v > maxV:
             maxV = v

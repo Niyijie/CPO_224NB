@@ -33,10 +33,13 @@ class TestImmutableList(unittest.TestCase):
         self.assertEqual(filter(root), [1,3])
 
     def test_findmax(self):
-        root1 = TreeNode(1,
-                                 TreeNode(2, TreeNode(3)),
-                                 TreeNode(4))
-        self.assertEqual(find_maxval(root1),4)
+        # root1 = TreeNode(1,
+        #                          TreeNode(2, TreeNode(3)),
+        #                          TreeNode(4))
+        # self.assertEqual(find_maxval(root1),4)
+
+        root1 = TreeNode(-10000000, TreeNode(-10000001))
+        self.assertEqual(find_maxval(root1), -10000000)
 
     def test_map(self):
         root1 = TreeNode(1,
