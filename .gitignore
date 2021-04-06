@@ -1,1 +1,3 @@
-.hypothesis
+src\**\__pychche__
+src\**\.hypothesis
+**\.DS_Store
