@@ -35,7 +35,7 @@ class TreeNode(object):
         return self.value
 
 
-class BinaryTree(object):
+class TreeSet(object):
     def __init__(self, root=None):
         # constructor
         self.root = root
@@ -286,9 +286,9 @@ class BinaryTree(object):
 
 if __name__ == '__main__':
     x = [1, 2, 3]
-    bt = BinaryTree()
+    bt = TreeSet()
     bt = bt.from_list(x)
-    tree = BinaryTree(TreeNode(2, lchild=TreeNode(3, rchild=TreeNode(5)),
+    tree = TreeSet(TreeNode(2, lchild=TreeNode(3, rchild=TreeNode(5)),
                         rchild=TreeNode(4, lchild=TreeNode(6))))
 
     print(tree.to_list_in_order())

@@ -2,7 +2,7 @@ import unittest
 from hypothesis import given
 import hypothesis.strategies as st
 
-from BinaryTree_Immutable import *
+from immutable import *
 
 class TestImmutableList(unittest.TestCase):
     def test_size(self):
