@@ -47,26 +47,33 @@ def im_size(node):
 def add(root,value):
     # add new node
     new_node = TreeNode(value)
-    # if tree is empty
+
     if root is None:
-        root = new_node
+        new_root = new_node
     else:
-        # use queue to find the next position
-        queue = Queue()
-        queue.put(root)
-        while not queue.empty():
-            # if cur_node exists
-            cur_node = queue.get()
-            if cur_node.lchild is None:
-                cur_node.lchild = new_node
-                break
-            elif cur_node.rchild is None:
-                cur_node.rchild = new_node
-                break
-            else:
-                queue.put(cur_node.lchild)
-                queue.put(cur_node.rchild)
-    return root
+        # get a copy of the root
+        lst = to_list_level_order(root)
+        new_root = from_list(lst)
+
+    # if tree is empty
+
+    # use queue to find the next position
+    queue = Queue()
+    queue.put(new_root)
+    while not queue.empty():
+        # if cur_node exists
+        cur_node = queue.get()
+        if cur_node.lchild is None:
+            cur_node.lchild = new_node
+            break
+        elif cur_node.rchild is None:
+            cur_node.rchild = new_node
+            break
+        else:
+            queue.put(cur_node.lchild)
+            queue.put(cur_node.rchild)
+
+    return new_root
 
 
 def mempty():

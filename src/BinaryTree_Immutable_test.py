@@ -74,9 +74,10 @@ class TestImmutableList(unittest.TestCase):
 
     def test_add(self):
         root = TreeNode(1)
-        add(root,2)
-        add(root,3)
-        self.assertEqual(preOrderTraverse(root),[1,2,3])
+        root1 = add(root,2)
+        self.assertEqual(preOrderTraverse(root1),[1,2])
+        root2 = add(root1,3)
+        self.assertEqual(preOrderTraverse(root2),[1,2,3])
 
     def test_tolist(self):
         root = TreeNode(1,
