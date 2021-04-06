@@ -26,11 +26,11 @@ class TestImmutableList(unittest.TestCase):
                                  TreeNode(4,TreeNode(5)))
         self.assertEqual(reduce(root1,reduce_fuc),15)
 
-    def test_fliter(self):
+    def test_filter(self):
         root = TreeNode(1,
                                  TreeNode(2, TreeNode(3)),
                                  TreeNode(4))
-        self.assertEqual(fliter(root), [1,3])
+        self.assertEqual(filter(root), [1,3])
 
     def test_findmax(self):
         root1 = TreeNode(1,
@@ -53,7 +53,7 @@ class TestImmutableList(unittest.TestCase):
     def test_mempty(self):
         self.assertEqual(mempty(),None)
 
-    def test_mcomcat(self):
+    def test_mconcat(self):
         root1 = TreeNode(1,
                                  TreeNode(2, TreeNode(3)),
                                  TreeNode(4))

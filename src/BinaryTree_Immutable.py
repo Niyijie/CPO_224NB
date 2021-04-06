@@ -186,7 +186,7 @@ def map(node,f):
     return listmap
 
 # find the even value
-def fliter(node):
+def filter(node):
     list = preOrderTraverse(node)
     new_list = []
     for i in list:
