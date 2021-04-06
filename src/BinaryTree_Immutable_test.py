@@ -88,14 +88,12 @@ class TestImmutableList(unittest.TestCase):
     @given(st.lists(st.integers()))
     def test_from_list_to_list_equality(self,a):
         # a = [1, 2, 3, 4]
-        b1 = TreeNode()
-        self.assertEqual(to_list_level_order(from_list(b1,a)), a)
+        self.assertEqual(to_list_level_order(from_list(a)), a)
 
     @given(st.lists(st.integers()))
     def test_monoid_identity(self,lst):
         #lst = [1, 2, 3, 4]
-        root = TreeNode()
-        tree = from_list(root,lst)
+        tree = from_list(lst)
         # check tree1 + tree2 = tree2 + tree1
         self.assertEqual(mconcat(mempty(), tree), tree)
         self.assertEqual(mconcat(tree, mempty()), tree)
@@ -103,13 +101,10 @@ class TestImmutableList(unittest.TestCase):
 
     @given(la=st.lists(st.integers()),lb=st.lists(st.integers()),lc=st.lists(st.integers()))
     def test_monoid_associativity(self,la,lb,lc):
-        tree1 = TreeNode()
-        tree2 = TreeNode()
-        tree3 = TreeNode()
         # (tree1+tree2)+tree3
-        temp_tree1 = from_list(tree1,la)
-        temp_tree2 = from_list(tree2,lb)
-        temp_tree3 = from_list(tree3,lc)
+        temp_tree1 = from_list(la)
+        temp_tree2 = from_list(lb)
+        temp_tree3 = from_list(lc)
         x1=mconcat(mconcat(temp_tree1,temp_tree2),temp_tree3)
         # tree1+(tree2+tree3)
         x2=mconcat(temp_tree1,mconcat(temp_tree2,temp_tree3))
@@ -117,8 +112,7 @@ class TestImmutableList(unittest.TestCase):
 
     def test_iterator(self):
         x = [1, 2, 3]
-        root = TreeNode()
-        root = from_list(root, x)
+        root = from_list(x)
         tmp = []
         try:
             get_next = iterator(root)

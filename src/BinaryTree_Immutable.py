@@ -129,13 +129,11 @@ def to_list_level_order(root):
             queue.put(cur_node.rchild)
     return my_list
 
-def from_list(root, lst):
-
+def from_list(lst):
     temp_list = lst.copy()
     flag = False
     if len(lst) == 0:
-        root = None
-        return
+        return None
     value = temp_list[0]
     temp_list.pop(0)
     root = TreeNode(value)
