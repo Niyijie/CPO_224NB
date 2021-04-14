@@ -204,7 +204,10 @@ class HashDict:
         my_dict = {}
         for v in self.values:
             if v and v.deleted == 0:
-                my_dict[v.key] = f(self.get(v.key))
+                if v.value:
+                    my_dict[v.key] = f(self.get(v.key))
+                else:
+                    my_dict[v.key] = self.get(v.key)
         return my_dict
 
     '''
