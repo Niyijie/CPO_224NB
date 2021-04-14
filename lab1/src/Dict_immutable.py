@@ -16,9 +16,6 @@ class HashDict:
         for i in range(100):
             self.values.append(None)
         self.len = 0      # the num of stored values
-        self.index = 0    # for iter
-
-
 
 def __size__(my_dict: HashDict):
     return my_dict.size
