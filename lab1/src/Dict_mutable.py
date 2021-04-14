@@ -16,11 +16,12 @@ class HashDict:
         for i in range(10):
             self.values.append(None)
         self.len = 0      # the num of stored values
+        self.index = 0    # for iter
 
-    def size(self):
+    def __size__(self):
         return self.size
 
-    def len(self):
+    def __len__(self):
         return self.len
 
     def mempty(self):
@@ -116,6 +117,16 @@ class HashDict:
         return None
 
     '''
+         get key set
+    '''
+    def getKeySet(self):
+        keySet = []
+        for v in self.values:
+            if v and v.deleted == 0:
+                keySet.append(v.key)
+        return keySet
+
+    '''
         remove key
     '''
     def remove(self,key):
@@ -140,11 +151,18 @@ class HashDict:
     def to_dict(self):
         dict = {}
         for v in self.values:
-            if v and v.deleted is not None:
+            if v and v.deleted == 0:
                 dict[v.key] = v.value
 
         return dict
 
+
+    '''
+        construct dict from dict
+    '''
+    def from_list(self, lst):
+        for k,v in enumerate(lst):
+            self.put(k, v)
     '''
          convert dict to list
     '''
@@ -163,7 +181,7 @@ class HashDict:
         eve_lst = []
         lst = self.to_list()
         for i in lst:
-            if i % 2 == is_even:
+            if type(i) == int and i % 2 == is_even:
                 eve_lst.append(i)
         return eve_lst
 
@@ -186,7 +204,7 @@ class HashDict:
         my_dict = {}
         for v in self.values:
             if v and v.deleted == 0:
-                v.value = f(self.get(v.key))
+                my_dict[v.key] = f(self.get(v.key))
         return my_dict
 
     '''
@@ -202,14 +220,27 @@ class HashDict:
     '''
         concat 2 dict,dict2 to dict1
     '''
-    def mconcat(self, dict2):
-
+    def mconcat(self,dict1, dict2):
+        if dict1 is None:
+            return dict2
         if dict2 is None:
-            return
+            return dict1
         for v in dict2.values:
             if v and v.deleted == 0:
                 value = dict2.get(v.key)
-                self.put(v.key, value)
+                dict1.put(v.key, value)
+        return dict1
+
+    def __iter__(self):
+        return iter(self.getKeySet())
+
+    def __next__(self):
+        if self.index >= self.len:
+            raise StopIteration("end")
+        else:
+            self.index += 1
+            val = self.get(self.getKeySet()[self.index - 1])
+            return val
 
 if __name__ == '__main__':
     dict = HashDict()
