@@ -17,6 +17,15 @@ class HashDict:
             self.values.append(None)
         self.len = 0      # the num of stored values
 
+    def size(self):
+        return self.size
+
+    def len(self):
+        return self.len
+
+    def mempty(self):
+        return None
+
     '''
         if dict is full
     '''
@@ -117,6 +126,7 @@ class HashDict:
             for n in self.values:
                 if n and n.key == key:
                     n.deleted = 1
+                    self.len = self.len - 1
                     return True
         return False
 
@@ -126,6 +136,14 @@ class HashDict:
     def from_dict(self, dict):
         for key, value in dict.items():
             self.put(key, value)
+
+    def to_dict(self):
+        dict = {}
+        for v in self.values:
+            if v and v.deleted is not None:
+                dict[v.key] = v.value
+
+        return dict
 
     '''
          convert dict to list
@@ -137,17 +155,87 @@ class HashDict:
                 lst.append(v.value)
         return lst
 
+    '''
+         is is_even=0 find not even else find even
+    '''
+    def find(self,is_even):
+        is_even = is_even % 2
+        eve_lst = []
+        lst = self.to_list()
+        for i in lst:
+            if i % 2 == is_even:
+                eve_lst.append(i)
+        return eve_lst
+
+    '''
+        filter element
+    '''
+    def filter(self,is_even):
+        is_even = is_even % 2
+        my_dict = {}
+        for v in self.values:
+            if v and v.deleted == 0 and v.value % 2 == is_even:
+                my_dict[v.key] = v.value
+
+        return my_dict
+
+    '''
+        map dict with f
+    '''
+    def map(self, f):
+        my_dict = {}
+        for v in self.values:
+            if v and v.deleted == 0:
+                v.value = f(self.get(v.key))
+        return my_dict
+
+    '''
+        Reduce the mapSet to one value.
+    '''
+    def reduce(self, f, initial):
+        result = initial
+        for v in self.values:
+            if v and v.deleted == 0:
+                result = f(result, self.get(v.key))
+        return result
+
+    '''
+        concat 2 dict,dict2 to dict1
+    '''
+    def mconcat(self, dict2):
+
+        if dict2 is None:
+            return
+        for v in dict2.values:
+            if v and v.deleted == 0:
+                value = dict2.get(v.key)
+                self.put(v.key, value)
+
 if __name__ == '__main__':
     dict = HashDict()
-
-    # dict.put(1,2)
-    # dict.put(1,3)
-    # dict.put(2,4)
 
     d = {"1":1,"2":2,"3":3}
     dict.from_dict(d)
 
     print(dict.to_list())
+
+    print(dict.find(0))
+
+    d2 = dict.to_dict()
+
+    d3 = dict.filter(1)
+
+    dict2 = HashDict()
+
+    dict2.put(1,2)
+    dict2.put(1,3)
+    dict2.put(2,4)
+
+    d4 = dict.mconcat(dict2)
+
+    print(d2["1"])
+
+
 
 
 
