@@ -8,12 +8,12 @@ class DictNode:
 
 class HashDict:
     '''
-        init the dict (initial size is 10)
+        init the dict (initial size is 100)
     '''
     def __init__(self):
         self.values = []    # store key
-        self.size = 10   # init size of dict is 100
-        for i in range(10):
+        self.size = 100   # init size of dict is 100
+        for i in range(100):
             self.values.append(None)
         self.len = 0      # the num of stored values
         self.index = 0    # for iter

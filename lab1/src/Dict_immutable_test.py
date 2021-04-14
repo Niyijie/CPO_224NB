@@ -4,6 +4,7 @@ import hypothesis.strategies as st
 
 from Dict_immutable import *
 from lab1.src.Dict_immutable import __len__
+from lab1.src.Dict_immutable import __eq__
 
 
 class TestIMmutable(unittest.TestCase):
@@ -145,6 +146,25 @@ class TestIMmutable(unittest.TestCase):
         dict = HashDict()
         from_list(dict,a)
         self.assertEqual(__len__(dict), len(a))
+
+    def test_eq(self):
+        lst1 = [1,2,3]
+        lst2 = [3,4,5]
+        dict1 = HashDict()
+        dict2 = HashDict()
+        from_list(dict1,lst1)
+        from_list(dict2,lst2)
+        self.assertEqual(__eq__(dict1,dict2), False)
+
+        lst3 = [1,2,3]
+        dict3 = HashDict()
+        from_list(dict3,lst3)
+        self.assertEqual(__eq__(dict1,dict3), True)
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

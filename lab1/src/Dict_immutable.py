@@ -8,15 +8,16 @@ class DictNode:
 
 class HashDict:
     '''
-        init the dict (initial size is 10)
+        init the dict (initial size is 100)
     '''
     def __init__(self):
         self.values = []    # store key
-        self.size = 10   # init size of dict is 100
-        for i in range(10):
+        self.size = 100   # init size of dict is 100
+        for i in range(100):
             self.values.append(None)
         self.len = 0      # the num of stored values
         self.index = 0    # for iter
+
 
 
 def __size__(my_dict: HashDict):
@@ -24,6 +25,17 @@ def __size__(my_dict: HashDict):
 
 def __len__(my_dict: HashDict):
     return my_dict.len
+
+def __eq__(dict1: HashDict, dict2: HashDict):
+    d1 = to_dict(dict1)
+    d2 = to_dict(dict2)
+    if d1.__len__() != d2.__len__():
+        return False
+    else:
+        for k,v in d1.items():
+            if d2[k] != v:
+                return False
+        return True
 
 def mempty(my_dict: HashDict):
     return None
@@ -236,7 +248,7 @@ def mconcat(dict1: HashDict, dict2: HashDict):
             put(dict1,v.key, value)
     return dict1
 
-def iterator(dict):
+def iterator(dict: HashDict):
     if dict is not None:
         res = []
         list = to_list(dict)
@@ -252,3 +264,4 @@ def iterator(dict):
         else:
             return next(a)
     return get_next
+
