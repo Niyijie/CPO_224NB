@@ -75,8 +75,8 @@ class TestIMmutable(unittest.TestCase):
         self.assertEqual(find(dict,1), [1,3,5])
 
     def test_map(self):
-        dict1 = {1: 123, 5: 321,3:None}
-        dict2 = {1: '123', 5: '321',3:None}
+        dict1 = {1: 123, 5: 321,3: None}
+        dict2 = {1: '123', 5: '321',3: None}
         dict = HashDict()
         from_dict(dict,dict1)
         self.assertEqual(map(dict,str), dict2)
@@ -160,11 +160,6 @@ class TestIMmutable(unittest.TestCase):
         dict3 = HashDict()
         from_list(dict3,lst3)
         self.assertEqual(__eq__(dict1,dict3), True)
-
-
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
