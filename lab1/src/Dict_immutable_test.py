@@ -3,8 +3,6 @@ from hypothesis import given
 import hypothesis.strategies as st
 
 from Dict_immutable import *
-from lab1.src.Dict_immutable import __len__
-from lab1.src.Dict_immutable import __eq__
 
 
 class TestIMmutable(unittest.TestCase):
@@ -27,6 +25,11 @@ class TestIMmutable(unittest.TestCase):
         remove(dict,"1")
         self.assertEqual(get(dict,"1"), None)
         self.assertEqual(to_dict(dict), {1:2})
+        # test remove not existence element
+        try:
+            remove(dict,888)
+        except KeyNotExistException as e:
+            e.__str__()
 
     def test_from_dict(self):
         dict = HashDict()
@@ -55,16 +58,16 @@ class TestIMmutable(unittest.TestCase):
 
     def test_len(self):
         dict = HashDict()
-        self.assertEqual(__len__(dict), 0)
+        self.assertEqual(length(dict), 0)
         put(dict,1, 2)
-        self.assertEqual(__len__(dict), 1)
+        self.assertEqual(length(dict), 1)
         put(dict,2, 3)
-        self.assertEqual(__len__(dict), 2)
+        self.assertEqual(length(dict), 2)
         # if the key is same it will replace the old one
         put(dict,2, 5)
-        self.assertEqual(__len__(dict), 2)
+        self.assertEqual(length(dict), 2)
         remove(dict,1)
-        self.assertEqual(__len__(dict), 1)
+        self.assertEqual(length(dict), 1)
 
     def test_find(self):
         # find not even
@@ -145,7 +148,7 @@ class TestIMmutable(unittest.TestCase):
     def test_python_len_and_dict_len_equality(self, a):
         dict = HashDict()
         from_list(dict,a)
-        self.assertEqual(__len__(dict), len(a))
+        self.assertEqual(length(dict), len(a))
 
     def test_eq(self):
         lst1 = [1,2,3]
@@ -154,12 +157,15 @@ class TestIMmutable(unittest.TestCase):
         dict2 = HashDict()
         from_list(dict1,lst1)
         from_list(dict2,lst2)
-        self.assertEqual(__eq__(dict1,dict2), False)
+        self.assertEqual(equare(dict1,dict2), False)
 
         lst3 = [1,2,3]
         dict3 = HashDict()
         from_list(dict3,lst3)
-        self.assertEqual(__eq__(dict1,dict3), True)
+        self.assertEqual(equare(dict1,dict3), True)
+
 
 if __name__ == '__main__':
     unittest.main()
+
+

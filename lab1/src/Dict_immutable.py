@@ -1,5 +1,15 @@
 import math
 
+class KeyNotExistException(Exception):
+    '''
+        this is a exception for key not exist
+    '''
+    def __init__(self,key):
+        self.key = key
+
+    def __str__(self):
+        print("key:" + str(self.key) + ",does not exist in the dict")
+
 class DictNode:
     def __init__(self, key=None, value=None):
         self.key = key
@@ -17,13 +27,13 @@ class HashDict:
             self.values.append(None)
         self.len = 0      # the num of stored values
 
-def __size__(my_dict: HashDict):
+def size(my_dict: HashDict):
     return my_dict.size
 
-def __len__(my_dict: HashDict):
+def length(my_dict: HashDict):
     return my_dict.len
 
-def __eq__(dict1: HashDict, dict2: HashDict):
+def equare(dict1: HashDict, dict2: HashDict):
     d1 = to_dict(dict1)
     d2 = to_dict(dict2)
     if d1.__len__() != d2.__len__():
@@ -134,6 +144,8 @@ def getKeySet(my_dict: HashDict):
     for v in my_dict.values:
         if v and v.deleted == 0:
             keySet.append(v.key)
+
+
     return keySet
 
 '''
@@ -142,14 +154,14 @@ def getKeySet(my_dict: HashDict):
 def remove(my_dict: HashDict,key):
     value = get(my_dict,key)
     if value == None:
-        return False
+        raise KeyNotExistException(key)
     else:
         for n in my_dict.values:
             if n and n.key == key:
                 n.deleted = 1
                 my_dict.len = my_dict.len - 1
                 return True
-    return False
+        raise KeyNotExistException(key)
 
 '''
     construct dict from dict
