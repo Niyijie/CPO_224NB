@@ -95,6 +95,7 @@ class TestIMmutable(unittest.TestCase):
     def test_iter(self):
         lst = [1, 2, 3, 4, 5]
         dict = HashDict()
+        # key is index , value is the lst[index]
         from_list(dict, lst)
         tmp = []
         try:
@@ -108,6 +109,32 @@ class TestIMmutable(unittest.TestCase):
 
         get_next = iterator(None)
         self.assertRaises(StopIteration, lambda: get_next())
+
+        # test for e in youStructure: something
+        for key in dict:
+            print(key)
+
+        # test two iterators work in parallel
+        itera = iter(dict)
+        iterb = iter(dict)
+
+        self.assertEqual(next(itera), 0)
+        self.assertEqual(next(iterb), 0)
+
+        self.assertEqual(itera.__next__(), 1)
+        self.assertEqual(iterb.__next__(), 1)
+
+        self.assertEqual(next(itera), 2)
+        self.assertEqual(next(itera), 3)
+
+        self.assertEqual(next(iterb), 2)
+        self.assertEqual(next(iterb), 3)
+
+        self.assertEqual(itera.__next__(), 4)
+        self.assertEqual(iterb.__next__(), 4)
+
+        self.assertRaises(StopIteration, lambda: next(itera))
+        self.assertRaises(StopIteration, lambda: next(iterb))
 
 
     @given(a=st.lists(st.integers()))

@@ -27,6 +27,22 @@ class HashDict:
             self.values.append(None)
         self.len = 0      # the num of stored values
 
+        self.index = 0    # for iter
+
+    def __iter__(self):
+        return iter(getKeySet(self))
+
+    def __next__(self):
+        if self.index >= self.len:
+            raise StopIteration("end")
+        else:
+            self.index += 1
+            val = get(getKeySet(self)[self.index - 1])
+            return val
+
+
+
+
 def size(my_dict: HashDict):
     return my_dict.size
 

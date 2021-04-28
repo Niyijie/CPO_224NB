@@ -26,6 +26,12 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(dict.get("1"), None)
         self.assertEqual(dict.to_dict(), {"4":2})
 
+        # test remove not existence element
+        try:
+            dict.remove(1024)
+        except KeyNotExistException as e:
+            e.__str__()
+
     def test_from_dict(self):
         dict = HashDict()
         dict.from_dict({1: 1, 2: 2, 3: 3})
@@ -88,14 +94,30 @@ class TestMutable(unittest.TestCase):
 
     def test_iter(self):
         dict = HashDict()
-        dict.from_dict({1: 1, "2": 2, 3: 3, 4: 4})
-        dict2 = {}
-        for v in dict.values:
-            if v and v.deleted == 0:
-                dict2[v.key] = dict.get(v.key)
-        self.assertEqual(dict.to_dict(), dict2)
-        i = iter(HashDict())
-        self.assertRaises(StopIteration, lambda: next(i))
+        dict.from_dict({1: 1, 2: "aaa", 5: "bbb", 7: 4})
+
+        # test for e in youStructure: something
+        for key in dict:
+            print(key)
+
+        # test two iterators work in parallel
+        itera = iter(dict)
+        iterb = iter(dict)
+
+        self.assertEqual(next(itera), 1)
+        self.assertEqual(next(iterb), 1)
+
+        self.assertEqual(itera.__next__(), 2)
+        self.assertEqual(iterb.__next__(), 2)
+
+        self.assertEqual(next(itera), 5)
+        self.assertEqual(next(itera), 7)
+
+        self.assertEqual(next(iterb), 5)
+        self.assertEqual(next(iterb), 7)
+
+        self.assertRaises(StopIteration, lambda: next(itera))
+        self.assertRaises(StopIteration, lambda: next(iterb))
 
     @given(a=st.lists(st.integers()))
     def test_identity(self, a):
