@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # ret = regex.isMatch('n')
     # print(ret)
 
-    regex = regex('^p')
+    regex = Regex('^p')
     regex.compile()
     ret = regex.isMatch('ppadas')
     print(ret)

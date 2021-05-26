@@ -3,6 +3,9 @@ class Reader(object):
         self.string = partten
         self.cur = 0
 
+    def tail(self):
+        return self.string[-1]
+
     def peak(self):
         if self.cur == len(self.string):
             return '\0'

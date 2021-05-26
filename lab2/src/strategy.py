@@ -34,6 +34,8 @@ class SpaceMatchStrategy(MatchStrategy):
 class HatMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return c == edge[1]
+    def check(self):
+        print(123)
 
 class MatchStrategyManager(object):
     def __init__(self):

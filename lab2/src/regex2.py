@@ -4,15 +4,12 @@ from lab2.src.reader import *
 from lab2.src.strategy import *
 
 
-class Regex(object):
+class regex(object):
     def __init__(self,partten):
         self.reader = Reader(partten)
         self.nfa = None
         self.matchStrategyManager = MatchStrategyManager()
-        # use for ^
-        self.isHat = False
-        # use for $
-        self.isDoller = False
+        self.forceQuit = False
 
     def compile(self):
         nfaGraph = self.regex2nfa()
@@ -22,21 +19,14 @@ class Regex(object):
 
     def regex2nfa(self):
         nfaGraph = None
-        # check ^ and $
-        if self.reader.peak() == '^':
-            self.isHat = True
-            self.reader.next()
-        elif self.reader.tail() == '$':
-            self.isDoller = True
-            # if doller reverse the pattern  abcd -> dcba
-            self.reader.string = self.reader.string[::-1]
-            self.reader.next()
-
         while self.reader.hasNext():
             ch = self.reader.next()
             edge = None
             if ch == '.':
                 edge = '.'
+            elif ch == '^':
+                nextCh = self.reader.next()
+                edge = '^' + nextCh
             elif ch == '\\':
                 nextCh = self.reader.next()
                 if nextCh == 'd':
@@ -60,11 +50,7 @@ class Regex(object):
                     nfaGraph = newNfa
                 else:
                     nfaGraph.addSeriesGraph(newNfa)
-        if self.isHat or self.isDoller:
-            mid = State()
-            mid.IsEnd = True
-            mid.addPath(EPSILON,nfaGraph.end)
-            nfaGraph.end.addPath('.',mid)
+
         return nfaGraph
 
     def checkRepeat(self,nfa:NFA):
@@ -78,12 +64,11 @@ class Regex(object):
 
     def isMatch(self,text):
         start = self.nfa.start
-        if self.isDoller:
-            text = text[::-1]
-
         return self.match(text,0,start)
 
     def match(self,text,pos,curState:State):
+        if self.forceQuit:
+            return True
         if pos == len(text):
             stateLst = []
             if curState.edgeMap.__contains__(EPSILON):
@@ -101,9 +86,15 @@ class Regex(object):
                     if self.match(text,pos,nextState):
                         return True
             else:
-                matchStrategy = self.matchStrategyManager.getStrategy(edge)
+                if edge[0] == '^':
+                    matchStrategy = self.matchStrategyManager.getStrategy(edge[0])
+                else:
+                    matchStrategy = self.matchStrategyManager.getStrategy(edge)
                 if not matchStrategy.isMatch(text[pos], edge):
                     continue
+                elif edge[0] == '^':
+                    self.forceQuit = True
+                    return True
                 for nextState in curState.edgeMap.get(edge):
                     if self.match(text,pos+1,nextState):
                         return True
