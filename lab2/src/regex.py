@@ -44,6 +44,9 @@ class regex(object):
         if ch == '*':
             nfa.repeatStar()
             self.reader.next()
+        elif ch == '+':
+            nfa.repeatPlus()
+            self.reader.next()
 
     def isMatch(self,text):
         start = self.nfa.start
