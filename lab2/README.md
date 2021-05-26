@@ -9,9 +9,13 @@
 6. synopsis
     
     Design an embedded domain-specific language or a simple text parser.
+    
     Design architecture of a simple interpreter.
+    
     Develop a simple interpreter for a specific model of computation.
+    
     Develop unit tests.
+    
     Develop input data control in the aspect-oriented style.
 7. contribution summary for each member
     Ni Yijie completed the data structure design and code writing.
@@ -22,7 +26,7 @@
     8.3 we can run it in terminal
    ![img.png](graph/abc.png)
    ![img.png](graph/a+.png)
-   ![img.png](graph/a multiply.png)
+   ![img.png](graph/a_multiply.png)
    ![img.png](graph/a.b.png)
 9. Conclusion: This experiment completed the conversion and calculation of mathematical expressions. 
    This program makes us know how to design and test regular rules.
