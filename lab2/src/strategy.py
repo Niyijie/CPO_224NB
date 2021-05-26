@@ -2,8 +2,8 @@ from CONSTANT import *
 
 
 class MatchStrategy(object):
-    def __init__(self):
-        self.isReverse = False
+    # def __init__(self):
+    #     self.isReverse = False
 
     def isMatch(c, edge):
         return False
@@ -12,14 +12,29 @@ class CharMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return c.__eq__(edge)
 
+class DotMatchStrategy(MatchStrategy):
+    def isMatch(self,c, edge):
+        return (not c.__eq__('\n')) and (not c.__eq__('\r'))
+
+class DigitalMatchStrategy(MatchStrategy):
+    def isMatch(self,c, edge):
+        return str.isdigit(c)
+
+class SpaceMatchStrategy(MatchStrategy):
+    def isMatch(self,c, edge):
+        return (c == '\f' or c == '\n' or c == '\r' or c == '\t' or c == ' ')
+
 
 class MatchStrategyManager(object):
     def __init__(self):
         self.matchStrategyMap = {}
-        charMatchStrategy = CharMatchStrategy()
-
         # 放到策略表中
-        self.matchStrategyMap[CHAR] = charMatchStrategy
+        self.matchStrategyMap[CHAR] = CharMatchStrategy()
+        self.matchStrategyMap['.'] = DotMatchStrategy()
+        self.matchStrategyMap['\\d'] = DigitalMatchStrategy()
+        self.matchStrategyMap['\\s'] = SpaceMatchStrategy()
+
+
 
     def getStrategy(self,edge):
         if self.matchStrategyMap.__contains__(edge):

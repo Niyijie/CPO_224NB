@@ -21,8 +21,18 @@ class regex(object):
         while self.reader.hasNext():
             ch = self.reader.next()
             edge = None
-            if ch == '*':
-                print(123)
+            if ch == '.':
+                edge = '.'
+            elif ch == '\\':
+                nextCh = self.reader.next()
+                if nextCh == 'd':
+                    edge = "\\d"
+                elif nextCh == 's':
+                    edge = '\\s'
+                elif nextCh == 'w':
+                    edge = '\\w'
+                else:
+                    edge = nextCh
             else:
                 edge = ch
 
