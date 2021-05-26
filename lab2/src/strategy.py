@@ -20,13 +20,20 @@ class DigitalMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return str.isdigit(c)
 
+# match \\w
+class WMatchStrategy(MatchStrategy):
+    def isMatch(self,c, edge):
+        return str.isalpha(c) or str.isalnum(c) or c.__eq__('_')
+
 # match space
 class SpaceMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return (c == '\f' or c == '\n' or c == '\r' or c == '\t' or c == ' ')
 
-
-
+# match hat ^
+class HatMatchStrategy(MatchStrategy):
+    def isMatch(self,c, edge):
+        return c == edge[1]
 
 class MatchStrategyManager(object):
     def __init__(self):
@@ -36,7 +43,8 @@ class MatchStrategyManager(object):
         self.matchStrategyMap['.'] = DotMatchStrategy()
         self.matchStrategyMap['\\d'] = DigitalMatchStrategy()
         self.matchStrategyMap['\\s'] = SpaceMatchStrategy()
-
+        self.matchStrategyMap['\\w'] = WMatchStrategy()
+        self.matchStrategyMap['^'] = HatMatchStrategy()
 
     def getStrategy(self,edge):
         if self.matchStrategyMap.__contains__(edge):

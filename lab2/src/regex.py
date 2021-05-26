@@ -9,6 +9,7 @@ class regex(object):
         self.reader = Reader(partten)
         self.nfa = None
         self.matchStrategyManager = MatchStrategyManager()
+        self.forceQuit = False
 
     def compile(self):
         nfaGraph = self.regex2nfa()
@@ -23,6 +24,9 @@ class regex(object):
             edge = None
             if ch == '.':
                 edge = '.'
+            elif ch == '^':
+                nextCh = self.reader.next()
+                edge = '^' + nextCh
             elif ch == '\\':
                 nextCh = self.reader.next()
                 if nextCh == 'd':
@@ -63,6 +67,8 @@ class regex(object):
         return self.match(text,0,start)
 
     def match(self,text,pos,curState:State):
+        if self.forceQuit:
+            return True
         if pos == len(text):
             stateLst = []
             if curState.edgeMap.__contains__(EPSILON):
@@ -80,9 +86,15 @@ class regex(object):
                     if self.match(text,pos,nextState):
                         return True
             else:
-                matchStrategy = self.matchStrategyManager.getStrategy(edge)
+                if edge[0] == '^':
+                    matchStrategy = self.matchStrategyManager.getStrategy(edge[0])
+                else:
+                    matchStrategy = self.matchStrategyManager.getStrategy(edge)
                 if not matchStrategy.isMatch(text[pos], edge):
                     continue
+                elif edge[0] == '^':
+                    self.forceQuit = True
+                    return True
                 for nextState in curState.edgeMap.get(edge):
                     if self.match(text,pos+1,nextState):
                         return True

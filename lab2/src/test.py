@@ -21,17 +21,17 @@ if __name__ == '__main__':
 
     # regex = regex('\\d\\d')
     # regex.compile()
-    # ret = regex.isMatch('11')
+    # ret = regex.isMatch('22')
     # print(ret)
 
     # regex = regex('\\d\\d\\s')
     # regex.compile()
-    # ret = regex.isMatch('11aa ')
+    # ret = regex.isMatch('11 ')
     # print(ret)
 
-    # regex = regex('\\d\\d\\s')
+    # regex = regex('\\d\\d\\s\\w')
     # regex.compile()
-    # ret = regex.isMatch('11aa ')
+    # ret = regex.isMatch('11 x')
     # print(ret)
 
     # regex = regex('\\n')
@@ -39,10 +39,11 @@ if __name__ == '__main__':
     # ret = regex.isMatch('n')
     # print(ret)
 
-    regex = regex('^n')
+    regex = regex('^p')
     regex.compile()
-    ret = regex.isMatch('n')
+    ret = regex.isMatch('ppadas')
     print(ret)
+
 
 
     # print(re.match('^111','111'))
