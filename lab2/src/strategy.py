@@ -2,27 +2,30 @@ from CONSTANT import *
 
 
 class MatchStrategy(object):
-    # def __init__(self):
-    #     self.isReverse = False
-
     def isMatch(c, edge):
         return False
 
+# match simple character
 class CharMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return c.__eq__(edge)
 
+# match dot
 class DotMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return (not c.__eq__('\n')) and (not c.__eq__('\r'))
 
+# match digital
 class DigitalMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return str.isdigit(c)
 
+# match space
 class SpaceMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return (c == '\f' or c == '\n' or c == '\r' or c == '\t' or c == ' ')
+
+
 
 
 class MatchStrategyManager(object):
@@ -33,7 +36,6 @@ class MatchStrategyManager(object):
         self.matchStrategyMap['.'] = DotMatchStrategy()
         self.matchStrategyMap['\\d'] = DigitalMatchStrategy()
         self.matchStrategyMap['\\s'] = SpaceMatchStrategy()
-
 
 
     def getStrategy(self,edge):
