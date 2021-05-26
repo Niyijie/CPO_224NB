@@ -1,5 +1,15 @@
 import math
 
+class KeyNotExistException(Exception):
+    '''
+        this is a exception for key not exist
+    '''
+    def __init__(self,key):
+        self.key = key
+
+    def __str__(self):
+        print("key:" + str(self.key) + ",does not exist in the dict")
+
 class DictNode:
     def __init__(self, key=None, value=None):
         self.key = key
@@ -117,7 +127,7 @@ class HashDict:
         return None
 
     '''
-         get key set
+        get key set
     '''
     def getKeySet(self):
         keySet = []
@@ -132,14 +142,15 @@ class HashDict:
     def remove(self,key):
         value = self.get(key)
         if value == None:
-            return False
+            raise KeyNotExistException(key)
+            # return False
         else:
             for n in self.values:
                 if n and n.key == key:
                     n.deleted = 1
                     self.len = self.len - 1
                     return True
-        return False
+            raise KeyNotExistException(key)
 
     '''
         construct dict from dict
@@ -265,6 +276,6 @@ if __name__ == '__main__':
     dict2.put(1,3)
     dict2.put(2,4)
 
-    d4 = dict.mconcat(dict2)
+    d4 = dict.mconcat(d2,dict2)
 
     print(d2["1"])
