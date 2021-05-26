@@ -14,6 +14,9 @@ class Regex(object):
         self.isDoller = False
         # use for []
         self.isRact = False
+        # match index
+        self.startIndex = -1
+        self.endIndex = -1
 
     def compile(self,partten):
         self.reader = Reader(partten)
@@ -23,6 +26,8 @@ class Regex(object):
         self.isDoller = False
         self.reader.cur = 0
         nfaGraph = self.regex2nfa()
+        # self.startIndex = -1
+        # self.endIndex = -1
         # 标记NFA的end节点为终止节点
         nfaGraph.end.IsEnd = True
         self.nfa = nfaGraph
@@ -50,6 +55,8 @@ class Regex(object):
                     self.reader.next()
                 # use new character set
                 self.reader = Reader(newStr)
+        elif self.reader.peak() == '{':
+            print(123)
 
         while self.reader.hasNext():
             ch = self.reader.next()
@@ -84,18 +91,19 @@ class Regex(object):
                         nfaGraph.addParallelGraph(edge)
                     else:
                         nfaGraph.addSeriesGraph(newNfa)
-        if self.isHat or self.isDoller:
-            mid = State()
-            mid.IsEnd = True
-            mid.addPath(EPSILON,nfaGraph.end)
-            nfaGraph.end.addPath('.',mid)
+        # if self.isHat or self.isDoller:
+        #     mid = State()
+        #     mid.IsEnd = True
+        #     mid.addPath(EPSILON,nfaGraph.end)
+        #     nfaGraph.end.addPath('.',mid)
         if self.isRact:
             end = State()
             for nextState in nfaGraph.start.edgeMap.values():
                 nextState[0].addPath(EPSILON,end)
-            mid = State()
-            nfaGraph.start.addPath('.',mid)
-            mid.addPath(EPSILON,nfaGraph.start)
+                #nextState[0].addPath(EPSILON,nfaGraph.start)
+            # mid = State()
+            # nfaGraph.start.addPath('.',mid)
+            # mid.addPath(EPSILON,nfaGraph.start)
             nfaGraph.end = end
         return nfaGraph
 
@@ -108,20 +116,64 @@ class Regex(object):
             nfa.repeatPlus()
             self.reader.next()
 
-    def isMatch(self,text):
+    def match(self,text:str):
         start = self.nfa.start
+        # self.startIndex = 0
         if self.isDoller:
             text = text[::-1]
+        # index
+        startIndex = 0
+        endIndex = -1
+        # find the match index
+        l = len(text)
+        for i in range(l):
+            subStr = text[:(l-i)]
+            ret = self.isMatch(subStr,0,start)
+            if ret:
+                endIndex = l-i-1
+                break
+        # return match range
+        if endIndex == -1:
+            return None
+        else:
+            if self.isDoller:
+                return (l-endIndex-1,l-1)
+            return (startIndex,endIndex)
 
-        return self.match(text,0,start)
+    def search(self,text:str):
+        start = self.nfa.start
+        # self.startIndex = 0
+        if self.isDoller:
+            text = text[::-1]
+        # index
+        startIndex = 0
+        endIndex = -1
+        # find the match index
+        l1 = len(text)
+        for i in range(l1):
+            startIndex = i
+            subStr1 = text[i:]
+            l2 = len(subStr1)
+            for j in range(l2):
+                subStr2 = subStr1[:(l2-j)]
+                ret = self.isMatch(subStr2,0,start)
+                if ret:
+                    endIndex = l1-j-1
+                    if self.isDoller:
+                        return (l1 - endIndex - 1, l1 - 1)
+                    return (startIndex, endIndex)
+            if self.isHat or self.isDoller:
+                break
+        if endIndex == -1:
+            return None
 
-    def match(self,text,pos,curState:State):
+    def isMatch(self,text,pos,curState:State):
         if pos == len(text):
             stateLst = []
             if curState.edgeMap.__contains__(EPSILON):
                 stateLst = curState.edgeMap.get(EPSILON)
             for nextState in stateLst:
-                if self.match(text,pos,nextState):
+                if self.isMatch(text,pos,nextState):
                     return True
             if curState.IsEnd:
                 return True
@@ -130,7 +182,7 @@ class Regex(object):
         for edge in curState.edgeMap.keys():
             if EPSILON.__eq__(edge):
                 for nextState in curState.edgeMap.get(edge):
-                    if self.match(text,pos,nextState):
+                    if self.isMatch(text,pos,nextState):
                         return True
             else:
                 matchStrategy = self.matchStrategyManager.getStrategy(edge)
@@ -139,7 +191,6 @@ class Regex(object):
                 elif self.isRact and not '.'.__eq__(edge):
                     self.nfa.start.IsEnd = True
                 for nextState in curState.edgeMap.get(edge):
-                    if self.match(text,pos+1,nextState):
+                    if self.isMatch(text,pos+1,nextState):
                         return True
         return False
-
