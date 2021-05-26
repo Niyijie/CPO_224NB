@@ -51,7 +51,18 @@ class TestMutable(unittest.TestCase):
     def test_doller(self):
         regex = Regex('abcd$')
         regex.compile()
-        self.assertEqual(regex.isMatch('abcdddabcd'), True)
+        self.assertEqual(regex.isMatch('abacdddabcd'), True)
+
+    def test_rect(self):
+        regex = Regex('[abc]')
+        regex.compile()
+        self.assertEqual(regex.isMatch('dhgeardhrty'), True)
+        regex.compile()
+        self.assertEqual(regex.isMatch('kbkk'), True)
+        regex.compile()
+        self.assertEqual(regex.isMatch('qweeryt'), False)
+
+
 
 
 if __name__ == '__main__':

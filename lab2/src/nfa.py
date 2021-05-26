@@ -32,3 +32,7 @@ class NFA(object):
     def addSeriesGraph(self,nfaGraph):
         self.end.addPath(EPSILON,nfaGraph.start)
         self.end = nfaGraph.end
+
+    def addParallelGraph(self,edge):
+        mid = State()
+        self.start.addPath(edge,mid)

@@ -34,8 +34,6 @@ class SpaceMatchStrategy(MatchStrategy):
 class HatMatchStrategy(MatchStrategy):
     def isMatch(self,c, edge):
         return c == edge[1]
-    def check(self):
-        print(123)
 
 class MatchStrategyManager(object):
     def __init__(self):
@@ -53,5 +51,5 @@ class MatchStrategyManager(object):
             return self.matchStrategyMap.get(edge)
         if len(edge) == 1:
             return self.matchStrategyMap.get(CHAR)
-        else:
-            return self.matchStrategyMap.get(CHARSET)
+        # else:
+        #     return self.matchStrategyMap.get(CHARSET)

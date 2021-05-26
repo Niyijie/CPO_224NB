@@ -3,7 +3,6 @@ from lab2.src.nfa import *
 from lab2.src.reader import *
 from lab2.src.strategy import *
 
-
 class Regex(object):
     def __init__(self,partten):
         self.reader = Reader(partten)
@@ -13,8 +12,15 @@ class Regex(object):
         self.isHat = False
         # use for $
         self.isDoller = False
+        # use for []
+        self.isRact = False
 
     def compile(self):
+        self.nfa = None
+        self.isRact = False
+        self.isHat = False
+        self.isDoller = False
+        self.reader.cur = 0
         nfaGraph = self.regex2nfa()
         # 标记NFA的end节点为终止节点
         nfaGraph.end.IsEnd = True
@@ -31,12 +37,17 @@ class Regex(object):
             # if doller reverse the pattern  abcd -> dcba
             self.reader.string = self.reader.string[::-1]
             self.reader.next()
+        elif self.reader.peak() == '[':
+            self.isRact = True
+            self.reader.next()
 
         while self.reader.hasNext():
             ch = self.reader.next()
             edge = None
             if ch == '.':
                 edge = '.'
+            elif ch == ']':
+                continue
             elif ch == '\\':
                 nextCh = self.reader.next()
                 if nextCh == 'd':
@@ -59,12 +70,23 @@ class Regex(object):
                 if nfaGraph == None:
                     nfaGraph = newNfa
                 else:
-                    nfaGraph.addSeriesGraph(newNfa)
+                    if self.isRact:
+                        nfaGraph.addParallelGraph(edge)
+                    else:
+                        nfaGraph.addSeriesGraph(newNfa)
         if self.isHat or self.isDoller:
             mid = State()
             mid.IsEnd = True
             mid.addPath(EPSILON,nfaGraph.end)
             nfaGraph.end.addPath('.',mid)
+        if self.isRact:
+            end = State()
+            for nextState in nfaGraph.start.edgeMap.values():
+                nextState[0].addPath(EPSILON,end)
+            mid = State()
+            nfaGraph.start.addPath('.',mid)
+            mid.addPath(EPSILON,nfaGraph.start)
+            nfaGraph.end = end
         return nfaGraph
 
     def checkRepeat(self,nfa:NFA):
@@ -104,6 +126,8 @@ class Regex(object):
                 matchStrategy = self.matchStrategyManager.getStrategy(edge)
                 if not matchStrategy.isMatch(text[pos], edge):
                     continue
+                elif self.isRact and not '.'.__eq__(edge):
+                    self.nfa.start.IsEnd = True
                 for nextState in curState.edgeMap.get(edge):
                     if self.match(text,pos+1,nextState):
                         return True

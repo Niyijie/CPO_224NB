@@ -4,10 +4,10 @@ from regex import *
 import re
 
 if __name__ == '__main__':
-    # regex = regex('a*')
-    # regex.compile()
-    # ret = regex.isMatch('aaaaa')
-    # print(ret)
+    regex = Regex('[abc]')
+    regex.compile()
+    ret = regex.isMatch('qweqwrerwta')
+    print(ret)
 
     # regex = regex('a+')
     # regex.compile()
@@ -39,10 +39,10 @@ if __name__ == '__main__':
     # ret = regex.isMatch('n')
     # print(ret)
 
-    regex = Regex('^p')
-    regex.compile()
-    ret = regex.isMatch('ppadas')
-    print(ret)
+    # regex = Regex('^p')
+    # regex.compile()
+    # ret = regex.isMatch('ppadas')
+    # print(ret)
 
 
 
