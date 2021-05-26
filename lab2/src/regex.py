@@ -4,8 +4,8 @@ from lab2.src.reader import *
 from lab2.src.strategy import *
 
 class Regex(object):
-    def __init__(self,partten):
-        self.reader = Reader(partten)
+    def __init__(self):
+        self.reader = None
         self.nfa = None
         self.matchStrategyManager = MatchStrategyManager()
         # use for ^
@@ -15,7 +15,8 @@ class Regex(object):
         # use for []
         self.isRact = False
 
-    def compile(self):
+    def compile(self,partten):
+        self.reader = Reader(partten)
         self.nfa = None
         self.isRact = False
         self.isHat = False
@@ -40,6 +41,15 @@ class Regex(object):
         elif self.reader.peak() == '[':
             self.isRact = True
             self.reader.next()
+            # if [^abc] we will matches characters with abd removed
+            if self.reader.peak() == '^':
+                newStr = 'qwertyuiopasdfghjklzxcvbnm1234567890 '
+                while self.reader.hasNext():
+                    ch = self.reader.peak()
+                    newStr = newStr.replace(ch,'')
+                    self.reader.next()
+                # use new character set
+                self.reader = Reader(newStr)
 
         while self.reader.hasNext():
             ch = self.reader.next()

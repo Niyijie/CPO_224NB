@@ -4,11 +4,12 @@ from regex import *
 import re
 
 if __name__ == '__main__':
-    regex = Regex('[abc]')
-    regex.compile()
-    ret = regex.isMatch('qweqwrerwta')
-    print(ret)
+    # regex = Regex('[abc]')
+    # regex.compile()
+    # ret = regex.isMatch('qweqwrerwta')
+    # print(ret)
 
+    print(re.match('[^abc]','abbb'))
     # regex = regex('a+')
     # regex.compile()
     # ret = regex.isMatch('aaaaa')
