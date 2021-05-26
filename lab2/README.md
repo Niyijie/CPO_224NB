@@ -7,6 +7,7 @@
 5. variant description: Regular expression-Sub variants define which construction you should support:
    \w, \s, \d, \, ^, ., $, *, +, [ ], \[^ ], {n}, {min,}, {,max}, {min,max}.
 6. synopsis
+    
     Design an embedded domain-specific language or a simple text parser.
     Design architecture of a simple interpreter.
     Develop a simple interpreter for a specific model of computation.
