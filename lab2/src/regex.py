@@ -250,6 +250,19 @@ class Regex(object):
                 matchRange = self.search(text)
             return text
 
+    def split(self,pattern,text:str):
+        self.compile(pattern)
+        matchRange = self.search(text)
+        lst = []
+        while matchRange:
+            ix = matchRange[0]
+            iy = matchRange[1]
+            lst.append(text[0:ix])
+            text = text[iy:]
+            self.compile(pattern)
+            matchRange = self.search(text)
+        lst.append(text)
+        return lst
 
 
     def isMatch(self,text,pos,curState:State):

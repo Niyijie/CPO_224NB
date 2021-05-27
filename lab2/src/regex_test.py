@@ -231,10 +231,18 @@ class TestMutable(unittest.TestCase):
     def test_sub(self):
         regex = Regex()
         self.assertEqual(regex.sub('aaa','CPO','xxxaaa123456789'),'xxxCPO123456789')
-        regex = Regex()
         self.assertEqual(regex.sub('aaa','CPO','xxxwww123456789'),'xxxwww123456789')
-        regex = Regex()
         self.assertEqual(regex.sub('aaa','CPO','xxxaaa1234aaa8aa9',count=2),'xxxCPO1234CPO8aa9')
+        self.assertEqual(regex.sub('\\d\\d', 'CPO', 'xxxaaa1234aaa89', count=3), 'xxxaaaCPOCPOaaaCPO')
+
+    def test_split(self):
+        regex = Regex()
+        self.assertEqual(regex.split('x','aaaxaaaxaaa'),['aaa', 'aaa', 'aaa'])
+        self.assertEqual(regex.split('x','axxxa'),['a', '', '', 'a'])
+        self.assertEqual(regex.split('x','aa'),['aa'])
+        self.assertEqual(regex.split('\\d\\d','a12134a'),['a', '', '4a'])
+
+
 
 if __name__ == '__main__':
     unittest.main()
