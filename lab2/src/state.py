@@ -1,3 +1,8 @@
+'''
+State is a class that
+describe the state of NFA graph
+'''
+
 from CONSTANT import *
 
 class State:

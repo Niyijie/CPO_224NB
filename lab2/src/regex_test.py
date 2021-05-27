@@ -1,9 +1,5 @@
 import unittest
 
-from graphviz import Digraph
-from hypothesis import given
-import hypothesis.strategies as st
-
 from lab2.src.regex import *
 
 

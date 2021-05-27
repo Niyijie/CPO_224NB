@@ -1,3 +1,8 @@
+'''
+we design some basic MatchStrategy
+to deal with ordinary situations
+'''
+
 from CONSTANT import *
 
 
@@ -38,7 +43,7 @@ class HatMatchStrategy(MatchStrategy):
 class MatchStrategyManager(object):
     def __init__(self):
         self.matchStrategyMap = {}
-        # 放到策略表中
+        # Put it in the strategy table
         self.matchStrategyMap[CHAR] = CharMatchStrategy()
         self.matchStrategyMap['.'] = DotMatchStrategy()
         self.matchStrategyMap['\\d'] = DigitalMatchStrategy()
@@ -51,5 +56,3 @@ class MatchStrategyManager(object):
             return self.matchStrategyMap.get(edge)
         if len(edge) == 1:
             return self.matchStrategyMap.get(CHAR)
-        # else:
-        #     return self.matchStrategyMap.get(CHARSET)

@@ -1,6 +1,9 @@
+'''
+This file holds global variables and can generate globally unique IDs
+'''
+
 EPSILON = "Epsilon"
 CHAR = "char";
-CHARSET = "charSet";
 
 ID = 0
 

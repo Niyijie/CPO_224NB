@@ -1,4 +1,8 @@
-from lab2.src.state import *
+'''
+Regex has match search sub split basic methods
+user use regex can do certain things with strings
+'''
+
 from lab2.src.nfa import *
 from lab2.src.reader import *
 from lab2.src.strategy import *
@@ -38,7 +42,7 @@ class Regex(object):
         nfaGraph = self.regex2nfa()
         if not nfaGraph:
             logging.info('pattern: ' + partten + ' ' + 'nfaGraph build error')
-        # 标记NFA的end节点为终止节点
+        # The end node marked NFA is the end node
         nfaGraph.end.IsEnd = True
         self.nfa = nfaGraph
         logging.info('pattern: ' + partten + ' ' + 'nfaGraph build success')
@@ -327,7 +331,7 @@ class Regex(object):
             self.findAllNode(v[0],nodeMap)
 
     def visualize(self,fileName):
-        """dot -Tpng fileName.dot -o fileName.png"""
+        # use dot -Tpng fileName.dot -o fileName.png to generate picture
         res = list()
         res.append('digraph G {')
         res.append(' rankdir=BT;')

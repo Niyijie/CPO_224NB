@@ -1,3 +1,7 @@
+'''
+The Reader class serves as an input buffer from which we can fetch characters
+'''
+
 class Reader(object):
     def __init__(self,partten):
         self.string = partten

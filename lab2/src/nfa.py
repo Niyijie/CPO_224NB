@@ -1,4 +1,9 @@
-from lab2.src.CONSTANT import *
+'''
+NFA classes are classes that describe matching rules
+If you can go smoothly from the start node to the end node,
+the match is successful
+'''
+
 from lab2.src.state import *
 
 class NFA(object):
@@ -7,25 +12,25 @@ class NFA(object):
         self.end = end
 
     def repeatStar(self):
-        # 建立重复多次分支
+        # Create branches that repeat multiple times
         self.repeatPlus()
-        # 重复0次，直接指向end
+        # I'm going to repeat it 0 times, directly to end
         self.addSToE()
 
-    # 重复0次  从start节点指向end节点
+    # Repeat 0 times from the start node to the end node
     def addSToE(self):
         self.start.addPath(EPSILON,self.end)
 
-    # 重复1-n次
+    # Repeat 1 to n times
     def repeatPlus(self):
-        # 创建新的起始和结束节点
+        # Create new start and end nodes
         newStart = State()
         newEnd = State()
         newStart.addPath(EPSILON,self.start)
         self.end.addPath(EPSILON,newEnd)
-        # 重新指向start
+        # Refer to start
         self.end.addPath(EPSILON,self.start)
-        # 改变引用使其成为新的图
+        # Change the reference to make it a new diagram
         self.start = newStart
         self.end = newEnd
 
