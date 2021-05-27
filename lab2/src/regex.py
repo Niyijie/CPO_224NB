@@ -2,6 +2,9 @@ from lab2.src.state import *
 from lab2.src.nfa import *
 from lab2.src.reader import *
 from lab2.src.strategy import *
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class Regex(object):
     def __init__(self):
@@ -28,9 +31,12 @@ class Regex(object):
         self.isMaxMatch = False
         self.reader.cur = 0
         nfaGraph = self.regex2nfa()
+        if not nfaGraph:
+            logging.info('pattern: ' + partten + ' ' + 'nfaGraph build error')
         # 标记NFA的end节点为终止节点
         nfaGraph.end.IsEnd = True
         self.nfa = nfaGraph
+        logging.info('pattern: ' + partten + ' ' + 'nfaGraph build success')
 
     def parseRepeat_n_m(self,edge,nfaGraph):
         s = ''
@@ -196,9 +202,12 @@ class Regex(object):
         # return match range
         if endIndex == -1:
             if self.isMaxMatch:
+                logging.info('pattern: ' + self.reader.string + ' match text: ' + text)
                 return (0,0)
+            logging.info('pattern: ' + self.reader.string +' not match text: ' + text)
             return None
         else:
+            logging.info('pattern: ' + self.reader.string + ' match text: ' + text)
             if self.isDoller:
                 return (l-endIndex-1,l-1+1)
             return (startIndex,endIndex+1)
@@ -222,6 +231,7 @@ class Regex(object):
                 ret = self.isMatch(subStr2,0,start)
                 if ret:
                     endIndex = l1-j-1
+                    logging.info('pattern: ' + self.reader.string + ' match text: ' + text)
                     if self.isDoller:
                         return (l1 - endIndex - 1, l1 - 1+1)
                     return (startIndex, endIndex+1)
@@ -229,7 +239,9 @@ class Regex(object):
                 break
         if endIndex == -1:
             if self.isMaxMatch:
+                logging.info('pattern: ' + self.reader.string + ' match text: ' + text)
                 return (0,0)
+            logging.info('pattern: ' + self.reader.string + ' match text: ' + text)
             return None
 
     def sub(self,pattern,repl,text:str,count=0):

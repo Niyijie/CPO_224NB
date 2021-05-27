@@ -36,3 +36,29 @@ class NFA(object):
     def addParallelGraph(self,edge):
         mid = State()
         self.start.addPath(edge,mid)
+
+    # @args_0
+    # def visualize(self):
+    #     res = []
+    #     res.append("digraph G {")
+    #     res.append(" rankdir=LR;")
+    #     for v in self.inputs:
+    #         res.append(" {}[shape=rarrow];".format(v))
+    #     for v in self.outputs:
+    #         res.append(" {}[shape=rarrow];".format(v))
+    #     for i, n in enumerate(self.nodes):
+    #         res.append(' n_{}[label="{}"];'.format(i, n.name))
+    #     for i, n in enumerate(self.nodes):
+    #         for v in n.inputs:
+    #             if v in self.inputs:
+    #                 res.append(' {} -> n_{};'.format(v, i))
+    #         for j, n2 in enumerate(self.nodes):
+    #             if i == j: continue
+    #             for v in n.inputs:
+    #                 if v in n2.outputs:
+    #                     res.append(' n_{} -> n_{}[label="{}"];'.format(j, i, v))
+    #         for v in n.outputs:
+    #             if v in self.outputs:
+    #                 res.append(' n_{} -> {};'.format(i, v))
+    #     res.append("}")
+    #     return "\n".join(res)
