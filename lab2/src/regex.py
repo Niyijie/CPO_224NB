@@ -14,9 +14,10 @@ class Regex(object):
         self.isDoller = False
         # use for []
         self.isRact = False
-        # match index
-        self.startIndex = -1
-        self.endIndex = -1
+        # use for {,m}
+        self.isMaxMatch = False
+        # record pre state node
+        self.preNode = None
 
     def compile(self,partten):
         self.reader = Reader(partten)
@@ -54,8 +55,21 @@ class Regex(object):
                     nfaGraph.end.addPath(edge,mid)
                     nfaGraph.end = mid
                 nfaGraph.end.addPath(EPSILON,pre)
+            elif lst[0] == '' and lst[1] != '':
+                self.isMaxMatch = True
+                # case {,m}
+                max = int(lst[1])
+                end = State()
+                for i in range(max-1):
+                    mid = State()
+                    nfaGraph.end.addPath(edge, mid)
+                    nfaGraph.end.addPath(EPSILON,end)
+                    nfaGraph.end = mid
+                nfaGraph.end.addPath(EPSILON, end)
+                nfaGraph.end = end
 
-            #  {,m} {n,m}
+
+            #  {n,m}
 
 
 
@@ -155,6 +169,8 @@ class Regex(object):
                 break
         # return match range
         if endIndex == -1:
+            if self.isMaxMatch:
+                return (0,0)
             return None
         else:
             if self.isDoller:
@@ -186,6 +202,8 @@ class Regex(object):
             if self.isHat or self.isDoller:
                 break
         if endIndex == -1:
+            if self.isMaxMatch:
+                return (0,0)
             return None
 
     def isMatch(self,text,pos,curState:State):

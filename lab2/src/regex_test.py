@@ -189,17 +189,33 @@ class TestMutable(unittest.TestCase):
     def test_repeat_n_m(self):
         regex = Regex()
         # text match
+        # 1. test {n,}
         regex.compile('a{3,}')
         self.assertEqual(regex.match('aaaaaa'), (0,6))
         regex.compile('a{3,}')
         self.assertEqual(regex.match('aa'), None)
-
+        # 2. test {,m}
+        regex.compile('a{,3}')
+        self.assertEqual(regex.match('aaaaaa'), (0,3))
+        regex.compile('a{,3}')
+        self.assertEqual(regex.match('aa'), (0,2))
+        regex.compile('a{,3}')
+        self.assertEqual(regex.match('caacadas'), (0,0))
 
         # test search
+        # 1. test {n,}
         regex.compile('a{3,}')
         self.assertEqual(regex.search('xaaaaaa'), (1,7))
         regex.compile('k{2,}')
         self.assertEqual(regex.search('xaakka'), (3,5))
+        # 2. test {,m}
+        regex.compile('k{,3}')
+        self.assertEqual(regex.search('akkka'), (1,4))
+        regex.compile('k{,3}')
+        self.assertEqual(regex.search('akkkkkkkka'), (1,4))
+        regex.compile('k{,3}')
+        self.assertEqual(regex.search('aqwetrety'), (0,0))
+
 
 if __name__ == '__main__':
     unittest.main()
