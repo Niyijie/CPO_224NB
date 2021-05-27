@@ -274,9 +274,5 @@ class TestMutable(unittest.TestCase):
         regex.compile('su.+g')
         self.assertEqual(regex.search('{"people":[{"name":"niyijie","email":"442653227@qq.com"},{"firstName":"sunqing","lastName":"326299717@qq.com"}]}'),(71,78))
 
-
-
-
-
 if __name__ == '__main__':
     unittest.main()

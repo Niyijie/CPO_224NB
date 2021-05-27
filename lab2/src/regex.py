@@ -345,7 +345,7 @@ class Regex(object):
                         key = '/'+ key[1]
                     res.append('node{} -> node{} [ label="{}" ];'.format(node.ID, value.ID,key))
         res.append('}')
-        file = open('../fig/'+fileName+'.dot', 'w')
+        file = open('../awt/'+fileName+'.dot', 'w')
         file.write("\n".join(res))
         file.close()
         logging.info("\n".join(res))
