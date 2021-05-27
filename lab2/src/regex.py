@@ -19,12 +19,15 @@ class Regex(object):
         # record pre state node
         self.preNode = None
 
+
+
     def compile(self,partten):
         self.reader = Reader(partten)
         self.nfa = None
         self.isRact = False
         self.isHat = False
         self.isDoller = False
+        self.isMaxMatch = False
         self.reader.cur = 0
         nfaGraph = self.regex2nfa()
         # 标记NFA的end节点为终止节点
@@ -67,11 +70,26 @@ class Regex(object):
                     nfaGraph.end = mid
                 nfaGraph.end.addPath(EPSILON, end)
                 nfaGraph.end = end
-
-
-            #  {n,m}
-
-
+            else:
+                # case {n,m}
+                min = int(lst[0])
+                max = int(lst[1])
+                # draw min NFA
+                for i in range(min-1):
+                    mid = State()
+                    nfaGraph.end.addPath(edge,mid)
+                    nfaGraph.end = mid
+                # draw max NFA
+                i = min
+                end = State()
+                while i < max:
+                    mid = State()
+                    nfaGraph.end.addPath(edge, mid)
+                    nfaGraph.end.addPath(EPSILON, end)
+                    nfaGraph.end = mid
+                    i += 1
+                nfaGraph.end.addPath(EPSILON, end)
+                nfaGraph.end = end
 
 
     def regex2nfa(self):

@@ -201,6 +201,15 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(regex.match('aa'), (0,2))
         regex.compile('a{,3}')
         self.assertEqual(regex.match('caacadas'), (0,0))
+        # 3. test {n,m}
+        regex.compile('a{1,3}')
+        self.assertEqual(regex.match('a'), (0,1))
+        regex.compile('a{1,3}')
+        self.assertEqual(regex.match('aaa'), (0,3))
+        regex.compile('a{1,3}')
+        self.assertEqual(regex.match('aaaaaa'), (0,3))
+        regex.compile('a{3,5}')
+        self.assertEqual(regex.match('aa'), None)
 
         # test search
         # 1. test {n,}
@@ -215,6 +224,11 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(regex.search('akkkkkkkka'), (1,4))
         regex.compile('k{,3}')
         self.assertEqual(regex.search('aqwetrety'), (0,0))
+        # 3. test {n,m}
+        regex.compile('k{1,3}')
+        self.assertEqual(regex.search('akkkkkkkaaa'), (1,4))
+        regex.compile('k{3,8}')
+        self.assertEqual(regex.search('aakkczxczx'), None)
 
 
 if __name__ == '__main__':
