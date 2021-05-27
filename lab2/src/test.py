@@ -9,7 +9,7 @@ if __name__ == '__main__':
     # ret = regex.isMatch('qweqwrerwta')
     # print(ret)
 
-    print(re.search('a{3}','xxaaaxxx'))
+    print(re.search('a{,3}','aaaaa'))
     # regex = regex('a+')
     # regex.compile()
     # ret = regex.isMatch('aaaaa')

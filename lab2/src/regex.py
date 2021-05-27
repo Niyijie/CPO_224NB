@@ -44,8 +44,19 @@ class Regex(object):
                 nfaGraph.end.addPath(edge,mid)
                 nfaGraph.end = mid
         else:
-            # case {n,} {,m} {n,m}
-            print(123)
+            # case {n,}
+            if lst[0] != '' and lst[1] == '':
+                min = int(lst[0])
+                pre = None
+                for i in range(min-1):
+                    mid = State()
+                    pre = nfaGraph.end
+                    nfaGraph.end.addPath(edge,mid)
+                    nfaGraph.end = mid
+                nfaGraph.end.addPath(EPSILON,pre)
+
+            #  {,m} {n,m}
+
 
 
 
