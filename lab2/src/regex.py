@@ -2,6 +2,7 @@ from lab2.src.state import *
 from lab2.src.nfa import *
 from lab2.src.reader import *
 from lab2.src.strategy import *
+from graphviz import Digraph
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +22,8 @@ class Regex(object):
         self.isMaxMatch = False
         # record pre state node
         self.preNode = None
+        # use for visualize
+        self.nodesLst = []
 
     def compile(self,partten):
         self.reader = Reader(partten)
@@ -30,6 +33,8 @@ class Regex(object):
         self.isDoller = False
         self.isMaxMatch = False
         self.reader.cur = 0
+        self.nodesLst = []
+        resetID()
         nfaGraph = self.regex2nfa()
         if not nfaGraph:
             logging.info('pattern: ' + partten + ' ' + 'nfaGraph build error')
@@ -276,7 +281,6 @@ class Regex(object):
         lst.append(text)
         return lst
 
-
     def isMatch(self,text,pos,curState:State):
         if pos == len(text):
             stateLst = []
@@ -305,3 +309,44 @@ class Regex(object):
                         return True
         return False
 
+    def drawGraph(self,dot:Digraph,edges:list,node:State,markSet:set,nodeDic:dict):
+        if markSet.__contains__((node.ID)):
+            return
+        # markSet.add(node.ID)
+        for key in node.edgeMap.keys():
+            nextNode = node.edgeMap.get(key)
+            dot.node(str(nextNode[0].ID),key)
+            edge = '' + str(node.ID) + str(nextNode[0].ID)
+            edges.append(edge)
+
+    def findAllNode(self,node:State,nodeMap:dict):
+        if nodeMap.__contains__(node.ID):
+            return
+        nodeMap[node.ID] = node
+        for v in node.edgeMap.values():
+            self.findAllNode(v[0],nodeMap)
+
+
+    def visualize(self,fileName):
+        """dot -Tpng fileName.dot -o fileName.png"""
+        res = list()
+        res.append('digraph G {')
+        res.append(' rankdir=BT;')
+
+        nodeMap = {}
+        start = self.nfa.start
+        self.findAllNode(start,nodeMap)
+        lst = nodeMap.items()
+        for node in nodeMap.values():
+            res.append(' node{}[label="{}"];'.format(node.ID, node.ID))
+        for node in nodeMap.values():
+            for key in node.edgeMap.keys():
+                for value in node.edgeMap[key]:
+                    if key[0] == '\\':
+                        key = '/'+ key[1]
+                    res.append('node{} -> node{} [ label="{}" ];'.format(node.ID, value.ID,key))
+        res.append('}')
+        file = open('../fig/'+fileName+'.dot', 'w')
+        file.write("\n".join(res))
+        file.close()
+        logging.info("\n".join(res))

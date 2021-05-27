@@ -1,4 +1,6 @@
 import unittest
+
+from graphviz import Digraph
 from hypothesis import given
 import hypothesis.strategies as st
 
@@ -242,7 +244,20 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(regex.split('x','aa'),['aa'])
         self.assertEqual(regex.split('\\d\\d','a12134a'),['a', '', '4a'])
 
+    from graphviz import Digraph
 
+    def test_visual(self):
+        regex = Regex()
+        regex.compile('a\\de')
+        regex.visualize('pic1')
+        regex.compile('a{2,5}')
+        regex.visualize('pic2')
+        regex.compile('abcd$')
+        regex.visualize('pic3')
+        regex.compile('[abc]')
+        regex.visualize('pic4')
+        regex.compile('a*bbbc')
+        regex.visualize('pic5')
 
 if __name__ == '__main__':
     unittest.main()

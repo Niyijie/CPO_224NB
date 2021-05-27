@@ -9,3 +9,7 @@ def getId():
     id = ID
     ID += 1
     return id
+
+def resetID():
+    global ID
+    ID = 0
