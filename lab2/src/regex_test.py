@@ -244,8 +244,6 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(regex.split('x','aa'),['aa'])
         self.assertEqual(regex.split('\\d\\d','a12134a'),['a', '', '4a'])
 
-    from graphviz import Digraph
-
     def test_visual(self):
         regex = Regex()
         regex.compile('a\\de')
@@ -258,6 +256,27 @@ class TestMutable(unittest.TestCase):
         regex.visualize('pic4')
         regex.compile('a*bbbc')
         regex.visualize('pic5')
+
+    def test_complex_example(self):
+        regex = Regex()
+        # case 1
+        regex.compile('a*x..yz{2}z')
+        self.assertEqual(regex.match("aaaax12yzzz"),(0,11))
+        self.assertEqual(regex.match("ax12yzzz"),(0,8))
+        self.assertEqual(regex.match("x12yzzz"),(0,7))
+        # case 2
+        regex.compile('\\d\\d\\d\\d-\\d\\d-\\d\\d')
+        self.assertEqual(regex.search('i am born in 2020-10-19'),(13,23))
+        # case 3
+        regex.compile('\\d+@qq\....')
+        self.assertEqual(regex.match('442653227@qq.com'),(0,16))
+        self.assertEqual(regex.search('{"people":[{"name":"niyijie","email":"442653227@qq.com"},{"firstName":"sunqing","lastName":"326299717@qq.com"}]}'),(38,54))
+        regex.compile('su.+g')
+        self.assertEqual(regex.search('{"people":[{"name":"niyijie","email":"442653227@qq.com"},{"firstName":"sunqing","lastName":"326299717@qq.com"}]}'),(71,78))
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

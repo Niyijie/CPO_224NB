@@ -326,7 +326,6 @@ class Regex(object):
         for v in node.edgeMap.values():
             self.findAllNode(v[0],nodeMap)
 
-
     def visualize(self,fileName):
         """dot -Tpng fileName.dot -o fileName.png"""
         res = list()
