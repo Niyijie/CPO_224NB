@@ -41,7 +41,6 @@ class TestMutable(unittest.TestCase):
         regex.compile('a+bb')
         self.assertEqual(regex.search('xxxaaabb'), (3,8))
 
-
     def test_dot(self):
         regex = Regex()
         # test match
@@ -86,7 +85,6 @@ class TestMutable(unittest.TestCase):
         self.assertEqual(regex.search('efc'), None)
         regex.compile('\\sefc')
         self.assertEqual(regex.search('abcd efc'), (4,8))
-
 
     def test_character(self):
         regex = Regex()
@@ -230,6 +228,13 @@ class TestMutable(unittest.TestCase):
         regex.compile('k{3,8}')
         self.assertEqual(regex.search('aakkczxczx'), None)
 
+    def test_sub(self):
+        regex = Regex()
+        self.assertEqual(regex.sub('aaa','CPO','xxxaaa123456789'),'xxxCPO123456789')
+        regex = Regex()
+        self.assertEqual(regex.sub('aaa','CPO','xxxwww123456789'),'xxxwww123456789')
+        regex = Regex()
+        self.assertEqual(regex.sub('aaa','CPO','xxxaaa1234aaa8aa9',count=2),'xxxCPO1234CPO8aa9')
 
 if __name__ == '__main__':
     unittest.main()

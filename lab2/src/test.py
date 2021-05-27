@@ -9,8 +9,7 @@ if __name__ == '__main__':
     # ret = regex.isMatch('qweqwrerwta')
     # print(ret)
 
-    print(re.match('a{1,3}','aaa'))
-    print(re.search('a{,3}','aaacadas'))
+    print(re.sub("aaa","???","qwaaaqweaaaaaaczxc",count=3))
 
     # regex = regex('a+')
     # regex.compile()

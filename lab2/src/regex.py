@@ -19,8 +19,6 @@ class Regex(object):
         # record pre state node
         self.preNode = None
 
-
-
     def compile(self,partten):
         self.reader = Reader(partten)
         self.nfa = None
@@ -90,7 +88,6 @@ class Regex(object):
                     i += 1
                 nfaGraph.end.addPath(EPSILON, end)
                 nfaGraph.end = end
-
 
     def regex2nfa(self):
         nfaGraph = None
@@ -169,6 +166,17 @@ class Regex(object):
             nfa.repeatPlus()
             self.reader.next()
 
+    def getNewText(self,matchRange:tuple,repl,text:str):
+        ix = matchRange[0]
+        iy = matchRange[1]
+        newText = ''
+        for i in range(0, ix):
+            newText += text[i]
+        newText += repl
+        for i in range(iy, len(text)):
+            newText += text[i]
+        return newText
+
     def match(self,text:str):
         start = self.nfa.start
         # self.startIndex = 0
@@ -224,6 +232,26 @@ class Regex(object):
                 return (0,0)
             return None
 
+    def sub(self,pattern,repl,text:str,count=0):
+        if count > 0:
+            for i in range(count):
+                self.compile(pattern)
+                matchRange = self.search(text)
+                if not matchRange:
+                    break
+                text = self.getNewText(matchRange,repl,text)
+            return text
+        else:
+            self.compile(pattern)
+            matchRange = self.search(text)
+            while matchRange:
+                text = self.getNewText(matchRange,repl,text)
+                self.compile(pattern)
+                matchRange = self.search(text)
+            return text
+
+
+
     def isMatch(self,text,pos,curState:State):
         if pos == len(text):
             stateLst = []
@@ -251,3 +279,4 @@ class Regex(object):
                     if self.isMatch(text,pos+1,nextState):
                         return True
         return False
+
