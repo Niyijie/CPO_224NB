@@ -12,6 +12,9 @@ class Reader(object):
 
         return self.string[self.cur]
 
+    def get(self,index):
+        return self.string[index]
+
     def next(self):
         if self.cur == len(self.string):
             return '\0'

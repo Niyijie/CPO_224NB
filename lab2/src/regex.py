@@ -26,11 +26,28 @@ class Regex(object):
         self.isDoller = False
         self.reader.cur = 0
         nfaGraph = self.regex2nfa()
-        # self.startIndex = -1
-        # self.endIndex = -1
         # 标记NFA的end节点为终止节点
         nfaGraph.end.IsEnd = True
         self.nfa = nfaGraph
+
+    def parseRepeat_n_m(self,edge,nfaGraph):
+        s = ''
+        while self.reader.peak() != '}':
+            s += self.reader.peak()
+            self.reader.next()
+        lst = s.split(',')
+        # case {n}
+        if len(lst) == 1:
+            num = int(lst[0])
+            for i in range(num-1):
+                mid = State()
+                nfaGraph.end.addPath(edge,mid)
+                nfaGraph.end = mid
+        else:
+            # case {n,} {,m} {n,m}
+            print(123)
+
+
 
     def regex2nfa(self):
         nfaGraph = None
@@ -55,15 +72,17 @@ class Regex(object):
                     self.reader.next()
                 # use new character set
                 self.reader = Reader(newStr)
-        elif self.reader.peak() == '{':
-            print(123)
-
         while self.reader.hasNext():
             ch = self.reader.next()
             edge = None
             if ch == '.':
                 edge = '.'
             elif ch == ']':
+                continue
+            elif ch == '{':
+                self.parseRepeat_n_m(self.reader.get(self.reader.cur-2),nfaGraph)
+                continue
+            elif ch == '}':
                 continue
             elif ch == '\\':
                 nextCh = self.reader.next()
@@ -91,19 +110,10 @@ class Regex(object):
                         nfaGraph.addParallelGraph(edge)
                     else:
                         nfaGraph.addSeriesGraph(newNfa)
-        # if self.isHat or self.isDoller:
-        #     mid = State()
-        #     mid.IsEnd = True
-        #     mid.addPath(EPSILON,nfaGraph.end)
-        #     nfaGraph.end.addPath('.',mid)
         if self.isRact:
             end = State()
             for nextState in nfaGraph.start.edgeMap.values():
                 nextState[0].addPath(EPSILON,end)
-                #nextState[0].addPath(EPSILON,nfaGraph.start)
-            # mid = State()
-            # nfaGraph.start.addPath('.',mid)
-            # mid.addPath(EPSILON,nfaGraph.start)
             nfaGraph.end = end
         return nfaGraph
 
@@ -137,8 +147,8 @@ class Regex(object):
             return None
         else:
             if self.isDoller:
-                return (l-endIndex-1,l-1)
-            return (startIndex,endIndex)
+                return (l-endIndex-1,l-1+1)
+            return (startIndex,endIndex+1)
 
     def search(self,text:str):
         start = self.nfa.start
@@ -160,8 +170,8 @@ class Regex(object):
                 if ret:
                     endIndex = l1-j-1
                     if self.isDoller:
-                        return (l1 - endIndex - 1, l1 - 1)
-                    return (startIndex, endIndex)
+                        return (l1 - endIndex - 1, l1 - 1+1)
+                    return (startIndex, endIndex+1)
             if self.isHat or self.isDoller:
                 break
         if endIndex == -1:
