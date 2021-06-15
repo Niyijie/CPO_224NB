@@ -6,13 +6,15 @@ user use regex can do certain things with strings
 from nfa import *
 from reader import *
 from strategy import *
-from graphviz import Digraph
+from graphviz import Digraph # type: ignore
 import logging
+
+from typing import List
 
 logging.basicConfig(level=logging.INFO)
 
 class Regex(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.reader = None
         self.nfa = None
         self.matchStrategyManager = MatchStrategyManager()
@@ -27,15 +29,17 @@ class Regex(object):
         # record pre state node
         self.preNode = None
         # use for visualize
-        self.nodesLst = []
+        self.nodesLst = [State]
 
-    def compile(self,partten):
-        self.reader = Reader(partten)
+    def compile(self,partten:str) -> None:
+        self.reader = Reader(partten) # type: ignore
+        assert isinstance(self.reader,Reader)
         self.nfa = None
         self.isRact = False
         self.isHat = False
         self.isDoller = False
         self.isMaxMatch = False
+        assert isinstance(self.reader,Reader)
         self.reader.cur = 0
         self.nodesLst = []
         resetID()
@@ -47,8 +51,9 @@ class Regex(object):
         self.nfa = nfaGraph
         logging.info('pattern: ' + partten + ' ' + 'nfaGraph build success')
 
-    def parseRepeat_n_m(self,edge,nfaGraph):
+    def parseRepeat_n_m(self,edge:str,nfaGraph:NFA) -> None:
         s = ''
+        assert isinstance(self.reader ,Reader)
         while self.reader.peak() != '}':
             s += self.reader.peak()
             self.reader.next()
@@ -104,9 +109,10 @@ class Regex(object):
                 nfaGraph.end.addPath(EPSILON, end)
                 nfaGraph.end = end
 
-    def regex2nfa(self):
+    def regex2nfa(self) -> NFA:
         nfaGraph = None
         # check ^ and $
+        assert isinstance(self.reader ,Reader)
         if self.reader.peak() == '^':
             self.isHat = True
             self.reader.next()
@@ -173,6 +179,7 @@ class Regex(object):
         return nfaGraph
 
     def checkRepeat(self,nfa:NFA):
+        assert isinstance(self.reader ,Reader)
         ch = self.reader.peak()
         if ch == '*':
             nfa.repeatStar()
@@ -181,7 +188,7 @@ class Regex(object):
             nfa.repeatPlus()
             self.reader.next()
 
-    def getNewText(self,matchRange:tuple,repl,text:str):
+    def getNewText(self,matchRange:tuple,repl:str,text:str):
         ix = matchRange[0]
         iy = matchRange[1]
         newText = ''
@@ -193,6 +200,7 @@ class Regex(object):
         return newText
 
     def match(self,text:str):
+        assert isinstance(self.nfa, NFA)
         start = self.nfa.start
         # self.startIndex = 0
         if self.isDoller:
@@ -222,6 +230,7 @@ class Regex(object):
             return (startIndex,endIndex+1)
 
     def search(self,text:str):
+        assert isinstance(self.nfa, NFA)
         start = self.nfa.start
         # self.startIndex = 0
         if self.isDoller:
@@ -253,7 +262,7 @@ class Regex(object):
             logging.info('pattern: ' + self.reader.string + ' match text: ' + text)
             return None
 
-    def sub(self,pattern,repl,text:str,count=0):
+    def sub(self,pattern:str,repl:str,text:str,count=0) -> str:
         if count > 0:
             for i in range(count):
                 self.compile(pattern)
@@ -271,7 +280,7 @@ class Regex(object):
                 matchRange = self.search(text)
             return text
 
-    def split(self,pattern,text:str):
+    def split(self,pattern,text:str) -> list:
         self.compile(pattern)
         matchRange = self.search(text)
         lst = []
@@ -285,21 +294,21 @@ class Regex(object):
         lst.append(text)
         return lst
 
-    def isMatch(self,text,pos,curState:State):
+    def isMatch(self,text,pos,curState:State) -> bool:
         if pos == len(text):
-            stateLst = []
+            stateLst = [] #type: List[State]
             if curState.edgeMap.__contains__(EPSILON):
-                stateLst = curState.edgeMap.get(EPSILON)
+                stateLst = curState.edgeMap.get(EPSILON) # type: ignore
             for nextState in stateLst:
                 if self.isMatch(text,pos,nextState):
                     return True
             if curState.IsEnd:
                 return True
             return False
-
+        #assert isinstance(curState.edgeMap,dict)
         for edge in curState.edgeMap.keys():
             if EPSILON.__eq__(edge):
-                for nextState in curState.edgeMap.get(edge):
+                for nextState in curState.edgeMap.get(edge): # type: ignore
                     if self.isMatch(text,pos,nextState):
                         return True
             else:
@@ -307,49 +316,53 @@ class Regex(object):
                 if not matchStrategy.isMatch(text[pos], edge):
                     continue
                 elif self.isRact and not '.'.__eq__(edge):
+                    assert isinstance(self.nfa, NFA)
                     self.nfa.start.IsEnd = True
-                for nextState in curState.edgeMap.get(edge):
+                for nextState in curState.edgeMap.get(edge): # type: ignore
                     if self.isMatch(text,pos+1,nextState):
                         return True
         return False
 
-    def drawGraph(self,dot:Digraph,edges:list,node:State,markSet:set,nodeDic:dict):
+    def drawGraph(self,dot:Digraph,edges:list,node:State,markSet:set) -> Optional[None]:
         if markSet.__contains__((node.ID)):
-            return
-        # markSet.add(node.ID)
+            return None
+        markSet.add(node.ID)
         for key in node.edgeMap.keys():
             nextNode = node.edgeMap.get(key)
-            dot.node(str(nextNode[0].ID),key)
-            edge = '' + str(node.ID) + str(nextNode[0].ID)
+            dot.node(str(nextNode[0].ID),key) # type: ignore
+            edge = '' + str(node.ID) + str(nextNode[0].ID) # type: ignore
             edges.append(edge)
+        return None
 
-    def findAllNode(self,node:State,nodeMap:dict):
+    def findAllNode(self,node:State,nodeMap) -> None:
+
         if nodeMap.__contains__(node.ID):
             return
         nodeMap[node.ID] = node
         for v in node.edgeMap.values():
             self.findAllNode(v[0],nodeMap)
 
-    def visualize(self,fileName):
+    def visualize(self,fileName:str) -> None:
         # use dot -Tpng fileName.dot -o fileName.png to generate picture
         res = list()
         res.append('digraph G {')
         res.append(' rankdir=BT;')
 
-        nodeMap = {}
-        start = self.nfa.start
-        self.findAllNode(start,nodeMap)
-        lst = nodeMap.items()
-        for node in nodeMap.values():
-            res.append(' node{}[label="{}"];'.format(node.ID, node.ID))
-        for node in nodeMap.values():
-            for key in node.edgeMap.keys():
-                for value in node.edgeMap[key]:
-                    if key[0] == '\\':
-                        key = '/'+ key[1]
-                    res.append('node{} -> node{} [ label="{}" ];'.format(node.ID, value.ID,key))
-        res.append('}')
-        file = open('../awt/'+fileName+'.dot', 'w')
-        file.write("\n".join(res))
-        file.close()
-        logging.info("\n".join(res))
+        nodeMap = {} #type: Dict[str,State]
+        if self.nfa is not None:
+            start = self.nfa.start
+            self.findAllNode(start,nodeMap)
+            nodeMap.items()
+            for node in nodeMap.values():
+                res.append(' node{}[label="{}"];'.format(node.ID, node.ID))
+            for node in nodeMap.values():
+                for key in node.edgeMap.keys():
+                    for value in node.edgeMap[key]:
+                        if key[0] == '\\':
+                            key = '/'+ key[1]
+                        res.append('node{} -> node{} [ label="{}" ];'.format(node.ID, value.ID,key))
+            res.append('}')
+            file = open('../awt/'+fileName+'.dot', 'w')
+            file.write("\n".join(res))
+            file.close()
+            logging.info("\n".join(res))
