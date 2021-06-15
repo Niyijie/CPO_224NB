@@ -7,12 +7,12 @@ CHAR = "char";
 
 ID = 0
 
-def getId():
+def getId() -> int:
     global ID
     id = ID
     ID += 1
     return id
 
-def resetID():
+def resetID() -> None:
     global ID
     ID = 0

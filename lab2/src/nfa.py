@@ -7,22 +7,22 @@ the match is successful
 from state import *
 
 class NFA(object):
-    def __init__(self, start:State, end:State):
+    def __init__(self, start:State, end:State) -> None:
         self.start = start
         self.end = end
 
-    def repeatStar(self):
+    def repeatStar(self) -> None:
         # Create branches that repeat multiple times
         self.repeatPlus()
         # I'm going to repeat it 0 times, directly to end
         self.addSToE()
 
     # Repeat 0 times from the start node to the end node
-    def addSToE(self):
+    def addSToE(self) -> None:
         self.start.addPath(EPSILON,self.end)
 
     # Repeat 1 to n times
-    def repeatPlus(self):
+    def repeatPlus(self) -> None:
         # Create new start and end nodes
         newStart = State()
         newEnd = State()
@@ -34,10 +34,10 @@ class NFA(object):
         self.start = newStart
         self.end = newEnd
 
-    def addSeriesGraph(self,nfaGraph):
+    def addSeriesGraph(self,nfaGraph) -> None:
         self.end.addPath(EPSILON,nfaGraph.start)
         self.end = nfaGraph.end
 
-    def addParallelGraph(self,edge):
+    def addParallelGraph(self,edge) -> None:
         mid = State()
         self.start.addPath(edge,mid)
