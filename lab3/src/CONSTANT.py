@@ -1,0 +1,22 @@
+'''
+state1: PENDING
+state2: RUNNING
+state3: FINISHED
+state4: CANCELED
+'''
+
+PENDING = 1
+RUNNING = 2
+FINISHED = 3
+CANCELED = 4
+
+ID = 0
+def getId() -> int:
+    global ID
+    id = ID
+    ID += 1
+    return id
+
+def resetID() -> None:
+    global ID
+    ID = 0
