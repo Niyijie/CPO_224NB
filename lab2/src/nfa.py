@@ -4,7 +4,7 @@ If you can go smoothly from the start node to the end node,
 the match is successful
 '''
 
-from lab2.src.state import *
+from state import *
 
 class NFA(object):
     def __init__(self, start:State, end:State):

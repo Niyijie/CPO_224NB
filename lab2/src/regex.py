@@ -3,9 +3,9 @@ Regex has match search sub split basic methods
 user use regex can do certain things with strings
 '''
 
-from lab2.src.nfa import *
-from lab2.src.reader import *
-from lab2.src.strategy import *
+from nfa import *
+from reader import *
+from strategy import *
 from graphviz import Digraph
 import logging
 
