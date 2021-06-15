@@ -264,7 +264,7 @@ class TestMutable(unittest.TestCase):
         regex.compile('\\d\\d\\d\\d-\\d\\d-\\d\\d')
         self.assertEqual(regex.search('i am born in 2020-10-19'),(13,23))
         # case 3
-        # befor : regex.compile('\\d+@qq\....')
+        # before : regex.compile('\\d+@qq\....')
         regex.compile('\\d+@qq\\....')
         self.assertEqual(regex.match('442653227@qq.com'),(0,16))
         self.assertEqual(regex.search('{"people":[{"name":"niyijie","email":"442653227@qq.com"},{"firstName":"sunqing","lastName":"326299717@qq.com"}]}'),(38,54))
