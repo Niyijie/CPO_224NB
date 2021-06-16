@@ -4,7 +4,7 @@ from CONSTANT import *
 from exception import *
 
 
-class Futures(object):
+class Future(object):
     def __init__(self):
         self.state = PENDING
         self.result = None
@@ -18,20 +18,21 @@ class Futures(object):
         return RUNNING == self.state
 
     def Result(self,timeout=None):
-        if self.state == FINISHED:
-            self.setState(FINISHED)
-            return self.result
-        elif self.state == CANCELED:
-            raise CanceledException(self.id)
-        else:
-            self.condition.wait(timeout)
+        with self.condition:
             if self.state == FINISHED:
-                self.setState(FINISHED)
                 return self.result
             elif self.state == CANCELED:
                 raise CanceledException(self.id)
             else:
-                raise TimeoutError(self.id)
+                # if not finished then wait
+                self.condition.wait(timeout)
+                if self.state == FINISHED:
+                    return self.result
+                elif self.state == CANCELED:
+                    raise CanceledException(self.id)
+                else:
+                    # means task has timeout
+                    raise TimeoutError(self.id)
 
     def Cancel(self):
         if self.state != FINISHED:
@@ -41,5 +42,7 @@ class Futures(object):
         self.state = state
 
     def setResult(self,result):
-        self.result = result
-        self.setState(FINISHED)
+        with self.condition:
+            self.result = result
+            self.setState(FINISHED)
+            self.condition.notify_all()

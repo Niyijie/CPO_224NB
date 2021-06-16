@@ -5,10 +5,12 @@ import time
 from concurrent import futures
 from concurrent.futures.process import ProcessPoolExecutor
 
+from futures import *
+from MyProcessPoolExecutor import *
 
 def task(n):
-    print('%s is runing' %os.getpid())
-    time.sleep(random.randint(1,3))
+    print("threadid: " + str(threading.current_thread()) + "running the task")
+    time.sleep(random.randint(1,5))
     return n**2
 
 if __name__ == '__main__':
@@ -21,7 +23,28 @@ if __name__ == '__main__':
     # print('+++>')
     # for future in futures:
     #     print(future.result())
-    condition = threading.Condition()
-    ret = condition.wait()
-    print(123)
+    # condition = threading.Condition()
+    # ret = condition.wait()
+    # print(123)
+
+    future = Future()
+    excutors = MyProcessPoolExecutor(4)
+    # for i in range(10):
+        #excutors.submit(task,i)
+    f1 = excutors.submit(task, 1)
+    f2 = excutors.submit(task, 2)
+    f3 = excutors.submit(task, 3)
+    print(f1.Result())
+    print(f2.Result())
+    print(f3.Result())
+
+    time.sleep(3)
+    #
+    # condition = threading.Condition()
+    # ret = condition.wait()
+    # print(123)
+
+
+
+
 
