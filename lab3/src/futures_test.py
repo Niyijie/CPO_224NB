@@ -87,6 +87,25 @@ class TestFuture(unittest.TestCase):
         time.sleep(5)
         self.assertEqual(f4.Cancel(),False)
 
+    def test_priority(self):
+        excutors = MyProcessPoolExecutor(3)
+        # f1
+        f1 = excutors.submit(task,1,5,priority=1)
+        f2 = excutors.submit(task,2,5,priority=3)
+        time.sleep(1)
+        f3 = excutors.submit(task,3,5,priority=2)
+        f4 = excutors.submit(task,4,5,priority=4)
+        time.sleep(1)
+        '''
+          this test we have 3 threads to deal 4 task
+          f3 and f4 are at the same time submit
+          but f4 priority is 4 and f3 priority is 2
+          so f4 will be deal ahead of f3
+        '''
+        self.assertEqual(f4.IsProgress(),True)
+        self.assertEqual(f3.IsProgress(),False)
+
+
 if __name__ == '__main__':
     unittest.main()
 
