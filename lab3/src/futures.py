@@ -32,11 +32,14 @@ class Future(object):
                     raise CanceledException(self.id)
                 else:
                     # means task has timeout
-                    raise TimeoutError(self.id)
+                    raise MyTimeoutException(self.id)
 
     def Cancel(self):
-        if self.state != FINISHED:
+        if self.state != FINISHED and self.state != RUNNING:
             self.setState(CANCELED)
+            return True
+        else:
+            return False
 
     def setState(self,state):
         self.state = state

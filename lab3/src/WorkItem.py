@@ -13,15 +13,9 @@ class WorkItem(object):
         #self.run()
 
     def run(self):
-        # check whether task has canceled
-        if self.future.state == CANCELED:
-            raise CanceledException(self.future.id)
         self.future.setState(RUNNING)
         if self.args is not None:
             result = self.fn(*self.args)
         else:
             result = self.fn()
-        # check again whether task has canceled
-        if self.future.state == CANCELED:
-            raise CanceledException(self.future.id)
         self.future.setResult(result)

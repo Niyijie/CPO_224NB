@@ -1,4 +1,4 @@
-class TimeoutException(Exception):
+class MyTimeoutException(Exception):
     '''
         this is a exception for timeout
     '''
