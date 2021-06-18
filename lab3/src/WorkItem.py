@@ -1,8 +1,10 @@
+
 from CONSTANT import *
 from exception import *
+from futures import *
 
 class WorkItem(object):
-    def __init__(self,future,fn,args,priority=MIN_PRIORITY):
+    def __init__(self,future:Future,fn,args:list,priority=MIN_PRIORITY)->None:
         self.future = future
         # function to be executed
         self.fn = fn
@@ -10,15 +12,15 @@ class WorkItem(object):
         self.args = args
         self.priority = priority
 
-    def run(self):
+    def run(self)->None:
         self.future.setState(RUNNING)
         if self.args is not None:
-            result = self.fn(*self.args)
+            result = self.fn(*self.args) # type: ignore
         else:
             result = self.fn()
         self.future.setResult(result)
 
-    def setPriority(self,priority):
+    def setPriority(self,priority:int)->None:
         self.priority = priority
 
     def __lt__(self, other):

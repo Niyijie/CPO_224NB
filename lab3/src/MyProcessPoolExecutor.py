@@ -4,7 +4,7 @@ from exception import *
 from futures import *
 from WorkItem import *
 
-def runner(work_queue):
+def runner(work_queue:queue.PriorityQueue)->None:
     while True:
         work_item = work_queue.get(block=True)
         if work_item is not None:
@@ -15,14 +15,14 @@ def runner(work_queue):
 
 class MyProcessPoolExecutor(object):
     # workers default is 2
-    def __init__(self,max_workers=2):
+    def __init__(self,max_workers=2)->None:
         # max_wokers must bigger than 0,if error input initial it 2
         if max_workers <=0:
             max_workers = 2
         self.max_workers = max_workers
         # self.work_queue = queue.Queue()
-        self.work_queue = queue.PriorityQueue()
-
+        self.work_queue = queue.PriorityQueue() # type: ignore
+        assert isinstance(self.work_queue,queue.PriorityQueue)
         self.threadsSet = set()
         # create threads pool
         for i in range(max_workers):
